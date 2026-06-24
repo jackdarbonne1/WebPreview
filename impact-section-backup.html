@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Impact Section — Backup</title>
+<!--
+  Backup of the Impact section removed from index.html.
+
+  To restore:
+  1. Copy the <section id="impact" ...> block back into index.html
+     (it previously sat between the Problem/Approach and Team sections).
+  2. Copy the CSS rules below back into the main <style> block
+     (they previously sat after .pa-col rules, around line 423).
+  3. Re-add the count-up ticker script (already present in index.html's
+     <script> block — just make sure .impact-card .num[data-target] elements
+     are back in the DOM for the observer to pick them up).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#2D3A6E;
+    --navy-deep:#1F2A52;
+    --blue-light:#AECBEE;
+    --blue-accent:#4F6FE8;
+    --blue-pale:#EAF1FC;
+    --bg:#F7F9FC;
+    --text-dark:#1B2240;
+    --text-gray:#697185;
+    --border:#E3E8F2;
+    --radius:18px;
+    --fs-xs:12px;
+    --fs-sm:14px;
+    --fs-base:16px;
+    --fs-md:18px;
+    --fs-lg:clamp(20px,2vw,24px);
+    --fs-xl:clamp(24px,3vw,36px);
+    --fs-2xl:clamp(36px,4.5vw,56px);
+    --fs-3xl:clamp(52px,7vw,84px);
+    --fs-stat:clamp(64px,10vw,108px);
+    --fs-impact-num:clamp(40px,6vw,64px);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Plus Jakarta Sans',sans-serif;
+    color:#fff;
+    background:var(--navy-deep);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:1180px;margin:0 auto;padding:0 32px;}
+  section{padding:96px 0;}
+  h1,h2,h3,h4{font-weight:800;letter-spacing:-0.02em;line-height:1.12;}
+  h2{font-size:var(--fs-2xl);}
+  .pill{display:inline-flex;align-items:center;font-weight:800;font-size:var(--fs-md);letter-spacing:0.08em;text-transform:uppercase;}
+  .pill.dark{color:#8AAEFF;}
+  .eyebrow-block{text-align:center;max-width:760px;margin:0 auto 56px;}
+  .eyebrow-block .pill{margin-bottom:22px;}
+  .eyebrow-block p{color:#AEB8D6;font-size:var(--fs-md);margin-top:16px;}
+
+  /* ---------- Impact ---------- */
+  .impact{background:var(--navy-deep);color:#fff;}
+  .impact-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:32px;
+    margin-top:64px;
+  }
+  @media(max-width:960px){.impact-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:560px){.impact-grid{grid-template-columns:1fr;}}
+  .impact-card{
+    background:rgba(255,255,255,0.04);
+    border:2px solid rgba(255,255,255,0.12);
+    border-radius:var(--radius);
+    padding:48px 36px;
+    text-align:left;
+    min-height:320px;
+    display:flex;
+    flex-direction:column;
+  }
+  .impact-card .num{
+    font-size:var(--fs-impact-num);
+    font-weight:800;
+    color:#fff;
+    line-height:1.1;
+    margin-bottom:20px;
+    font-variant-numeric:tabular-nums;
+    min-height:1.15em;
+  }
+  .impact-card .tag{
+    font-size:var(--fs-sm);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:#8AAEFF;
+    font-weight:700;
+    line-height:1.5;
+  }
+  .impact-card p{font-size:var(--fs-base);color:#C4CCE4;line-height:1.5;margin-top:10px;}
+</style>
+</head>
+<body>
+
+<!-- IMPACT -->
+<section id="impact" class="impact">
+  <div class="container">
+    <div class="eyebrow-block">
+      <span class="pill dark">The Impact</span>
+      <h2>Better outcomes for everyone in the system.</h2>
+      <p>Earlier diagnosis and expanded access create measurable value for patients, providers, practices, and payers alike.</p>
+    </div>
+
+    <div class="impact-grid">
+      <div class="impact-card">
+        <div class="num" data-prefix="$" data-target="2" data-decimals="1" data-suffix="B">$2.0B</div>
+        <div class="tag">Reduction in annual payer expenditure by diagnosing one stage earlier</div>
+      </div>
+      <div class="impact-card">
+        <div class="num" data-prefix="" data-target="50" data-suffix="%">50%</div>
+        <div class="tag">Reduction in patient out-of-pocket costs vs. late-stage diagnoses</div>
+      </div>
+      <div class="impact-card">
+        <div class="num" data-prefix="" data-target="350" data-suffix="+ hrs">350+ hrs</div>
+        <div class="tag">Freed per year, per urologist, for higher-complexity procedures</div>
+      </div>
+      <div class="impact-card">
+        <div class="num" data-prefix="$" data-target="1.5" data-decimals="1" data-suffix="M">$1.5M</div>
+        <div class="tag">In additional annual revenue from expanded screening capacity</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

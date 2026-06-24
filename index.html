@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumenate Medical | Bladder screening without the wait</title>
+<meta name="description" content="Lumenate Medical is expanding access to life-saving bladder cancer screening by empowering more healthcare providers to deliver it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#2D3A6E;
+    --navy-deep:#1F2A52;
+    --blue-light:#AECBEE;
+    --blue-accent:#4F6FE8;
+    --blue-pale:#EAF1FC;
+    --green:#8BC34A;
+    --bg:#F7F9FC;
+    --text-dark:#1B2240;
+    --text-gray:#697185;
+    --border:#E3E8F2;
+    --radius:18px;
+
+    /* Type scale */
+    --fs-xs:   12px;
+    --fs-sm:   14px;
+    --fs-base: 16px;
+    --fs-md:   18px;
+    --fs-lg:   clamp(20px, 2vw, 24px);
+    --fs-xl:   clamp(24px, 3vw, 36px);
+    --fs-2xl:  clamp(36px, 4.5vw, 56px);
+    --fs-3xl:  clamp(52px, 7vw, 84px);
+    --fs-stat: clamp(64px, 10vw, 108px);
+    --fs-impact-num: clamp(40px, 6vw, 64px);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Plus Jakarta Sans', sans-serif;
+    color:var(--text-dark);
+    background:var(--bg);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{display:block;}
+  a{text-decoration:none;color:inherit;}
+
+  /* ---------- Scroll reveal ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(36px);
+    transition:opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .reveal-stagger > *{
+    opacity:0;
+    transform:translateY(36px);
+    transition:opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal-stagger.visible > *{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .reveal-stagger.visible > *:nth-child(1){transition-delay:0s;}
+  .reveal-stagger.visible > *:nth-child(2){transition-delay:0.12s;}
+  .reveal-stagger.visible > *:nth-child(3){transition-delay:0.24s;}
+  .reveal-stagger.visible > *:nth-child(4){transition-delay:0.36s;}
+  @media (prefers-reduced-motion: reduce){
+    .reveal, .reveal-stagger > *{
+      opacity:1;
+      transform:none;
+      transition:none;
+    }
+  }
+  .container{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+  section{padding:96px 0;}
+  @media (max-width:768px){
+    section{padding:64px 0;}
+    .container{padding:0 20px;}
+  }
+
+  /* ---------- Typography helpers ---------- */
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--blue-accent);
+    font-weight:800;
+    font-size:var(--fs-md);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+  }
+  .pill.dark{
+    color:#8AAEFF;
+  }
+  h1,h2,h3,h4{
+    font-weight:800;
+    letter-spacing:-0.02em;
+    line-height:1.12;
+  }
+  h2{font-size:var(--fs-2xl);}
+  h3{font-size:var(--fs-lg);}
+  .eyebrow-block{
+    text-align:center;
+    max-width:760px;
+    margin:0 auto 56px;
+  }
+  .eyebrow-block .pill{margin-bottom:22px;}
+  .eyebrow-block p{
+    color:var(--text-gray);
+    font-size:var(--fs-md);
+    margin-top:16px;
+  }
+  .accent{
+    background:linear-gradient(90deg,var(--blue-accent),#8AB4FF);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .accent-green{color:var(--green);}
+  .accent-red{color:#E03B3B;}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:14px 28px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:15px;
+    border:none;
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn-primary{
+    background:var(--blue-accent);
+    color:#fff;
+    box-shadow:0 8px 24px rgba(79,111,232,0.28);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(79,111,232,0.35);}
+  .btn-outline{
+    background:transparent;
+    color:var(--text-dark);
+    border:1.5px solid var(--border);
+  }
+  .btn-outline:hover{border-color:var(--blue-accent);color:var(--blue-accent);}
+  .btn-light{
+    background:#fff;
+    color:var(--navy);
+  }
+  .btn-light:hover{transform:translateY(-2px);}
+
+  /* ---------- Header / Nav ---------- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(247,249,252,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 0;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:800;
+    font-size:19px;
+    color:var(--navy);
+  }
+  .logo span.medical{color:var(--blue-light);font-weight:700;}
+  .logo-img{
+    display:block;
+    height:44px;
+    width:161px;
+    object-fit:cover;
+    object-position:left center;
+  }
+  .nav-links{
+    display:flex;
+    align-items:center;
+    gap:36px;
+    font-weight:600;
+    font-size:15px;
+    color:var(--text-dark);
+  }
+  .nav-links a{color:var(--text-gray);transition:color .15s ease;}
+  .nav-links a:hover{color:var(--blue-accent);}
+  .nav-right{display:flex;align-items:center;gap:24px;}
+  .nav-toggle{display:none;background:none;border:none;cursor:pointer;}
+  @media (max-width:860px){
+    .nav-links{display:none;}
+    .nav-toggle{display:block;}
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    overflow:hidden;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:115px 0 70px;
+    background:linear-gradient(180deg,#EFF4FD 0%, #F7F9FC 100%);
+  }
+  @keyframes floatBlob1{
+    0%,100%{transform:translate(0,0) scale(1);}
+    33%{transform:translate(-120px,80px) scale(1.1);}
+    66%{transform:translate(80px,-60px) scale(0.92);}
+  }
+  @keyframes floatBlob2{
+    0%,100%{transform:translate(0,0) scale(1);}
+    33%{transform:translate(100px,-80px) scale(1.08);}
+    66%{transform:translate(-80px,100px) scale(0.93);}
+  }
+  .hero-blob{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(90px);
+    opacity:0.6;
+    z-index:0;
+  }
+  .hero-blob.b1{width:900px;height:900px;background:#BFD6F7;top:-320px;right:-300px;animation:floatBlob1 8s ease-in-out infinite;}
+  .hero-blob.b2{width:760px;height:760px;background:#D7E6FB;bottom:-340px;left:-280px;animation:floatBlob2 10s ease-in-out infinite;}
+  .hero-content{
+    display:none;
+  }
+  .hero-text{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    z-index:2;
+    text-align:center;
+    width:fit-content;
+    max-width:94vw;
+  }
+  .hero h1{
+    font-size:clamp(56px, 6.6vw, 96px);
+    margin-bottom:0;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    white-space:nowrap;
+  }
+  .hero-line{
+    display:block;
+    line-height:1.15;
+    padding-bottom:0.15em;
+  }
+  @media (max-width:520px){
+    .hero h1{font-size:9vw;}
+  }
+  .hero-actions{
+    display:flex;
+    gap:16px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .hero-image{
+    position:absolute;
+    bottom:0;
+    left:0;
+    height:100%;
+    width:auto;
+    z-index:1;
+    pointer-events:none;
+    opacity:0.7;
+    filter:grayscale(100%);
+  }
+  .hero-content{
+    justify-content:flex-end;
+  }
+  .hero-text{
+    max-width:560px;
+  }
+  @media (max-width:860px){
+    .hero-content{justify-content:center;}
+    .hero h1{text-align:center;align-items:center;}
+    .hero-actions{justify-content:center;}
+    .hero-image{height:50%;left:50%;transform:translateX(-50%);}
+  }
+  .hero-stats{
+    position:relative;
+    z-index:1;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:32px;
+    margin-top:80px;
+    text-align:center;
+  }
+  .hero-stats > div{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .hero-stats .stat-num{
+    font-size:var(--fs-stat);
+    font-weight:800;
+    color:var(--navy);
+    font-variant-numeric:tabular-nums;
+  }
+  .hero-stats .stat-label{
+    font-size:var(--fs-md);
+    color:var(--text-gray);
+    margin:12px auto 0;
+    max-width:280px;
+    line-height:1.5;
+  }
+
+  /* ---------- Partner strip ---------- */
+  .partners{
+    background:#fff;
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    padding:56px 0;
+    overflow:hidden;
+  }
+  .partners-label{
+    text-align:center;
+    font-size:var(--fs-md);
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:var(--text-gray);
+    font-weight:700;
+    margin-bottom:36px;
+  }
+  .marquee{
+    display:flex;
+    align-items:center;
+    gap:88px;
+    white-space:nowrap;
+    animation:scroll 32s linear infinite;
+    width:max-content;
+  }
+  .marquee img{
+    height:48px;
+    width:auto;
+    max-width:160px;
+    object-fit:contain;
+    flex-shrink:0;
+    filter:grayscale(100%) opacity(0.65);
+    transition:filter .2s ease;
+  }
+  .marquee img:hover{
+    filter:grayscale(0%) opacity(1);
+  }
+  @keyframes scroll{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+
+  /* ---------- Problem section ---------- */
+  .stat-row{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+    margin:0 auto 24px;
+  }
+  .stat-box{
+    background:#fff;
+    border:1.5px solid var(--border);
+    border-radius:var(--radius);
+    padding:28px 24px;
+    text-align:center;
+  }
+  .stat-box .num{
+    font-size:36px;
+    font-weight:800;
+    color:var(--blue-accent);
+    margin-bottom:8px;
+  }
+  .stat-box p{font-size:var(--fs-sm);color:var(--text-gray);}
+
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+  }
+  @media (max-width:860px){
+    .card-grid{grid-template-columns:1fr;}
+    .stat-row{grid-template-columns:1fr;}
+  }
+  .card{
+    background:#fff;
+    border:1.5px solid var(--border);
+    border-radius:var(--radius);
+    padding:32px 28px;
+  }
+  .card .icon{
+    width:48px;height:48px;
+    border-radius:12px;
+    background:var(--blue-pale);
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:20px;
+  }
+  .card h4{font-size:var(--fs-md);margin-bottom:10px;}
+  .card p{font-size:var(--fs-base);color:var(--text-gray);}
+
+  /* ---------- Problem / Approach split ---------- */
+  .problem-approach{background:linear-gradient(180deg,#F0F5FD 0%,#F7F9FC 100%);}
+  .pa-grid{
+    display:grid;
+    grid-template-columns:1fr 1px 1fr;
+    gap:0 72px;
+    align-items:start;
+  }
+  .pa-divider{
+    background:var(--border);
+    width:1px;
+    align-self:stretch;
+    min-height:100%;
+  }
+  .pa-col{
+    padding:16px 0;
+  }
+  .pa-col .pill{
+    margin-bottom:20px;
+    display:inline-block;
+  }
+  .pa-col h2{
+    margin-bottom:24px;
+    text-wrap:balance;
+    max-width:22ch;
+  }
+  /* Right column — Approach — slightly more prominent */
+  .pa-col:last-child h2{
+    max-width:20ch;
+  }
+  .pa-col:last-child .accent{
+    display:inline;
+  }
+  .pa-callout{
+    margin-top:48px;
+    background:var(--blue-pale);
+    border:1.5px solid #D9E5FB;
+    border-radius:var(--radius);
+    padding:32px 40px;
+  }
+  .pa-callout p{
+    color:var(--text-dark);
+    font-size:var(--fs-md);
+    line-height:1.7;
+    max-width:72ch;
+    margin:0 auto;
+    text-align:center;
+    opacity:0.85;
+  }
+  @media(max-width:768px){
+    .pa-grid{grid-template-columns:1fr;gap:48px 0;}
+    .pa-divider{display:none;}
+    .pa-col h2{max-width:100%;}
+  }
+
+  /* ---------- Problem (redesigned) ---------- */
+  .problem{background:linear-gradient(180deg,#F0F5FD 0%,#F7F9FC 100%);padding-bottom:40px;}
+  #approach{padding-top:40px;}
+  .problem-head{
+    max-width:720px;
+    margin:0 auto 56px;
+    text-align:center;
+  }
+  .problem-head .pill{margin-bottom:20px;}
+  .problem-head h2{text-wrap:balance;margin-bottom:20px;}
+  .problem-head p{
+    color:var(--text-gray);
+    font-size:var(--fs-md);
+    max-width:60ch;
+    margin:0 auto;
+  }
+  .problem-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:40px;
+    margin-bottom:8px;
+  }
+  .problem-stats .stat-box{
+    text-align:center;
+    background:none;
+    border:none;
+    border-radius:0;
+    padding:0;
+  }
+  .problem-stats .stat-box .num{
+    font-size:var(--fs-stat);
+    line-height:1;
+    color:#E03B3B;
+    font-variant-numeric:tabular-nums;
+    margin-bottom:12px;
+  }
+  .problem-stats .stat-box p{
+    font-size:var(--fs-base);
+    color:var(--text-gray);
+    line-height:1.5;
+    max-width:22ch;
+    margin:0 auto;
+  }
+  @media (max-width:860px){
+    .problem-stats{grid-template-columns:1fr;}
+  }
+  @media (max-width:768px){
+    .hero-stats{grid-template-columns:1fr;gap:40px;margin-top:48px;}
+    .impact-grid{grid-template-columns:1fr;gap:48px;}
+    .impact-stat .tag{white-space:normal;max-width:28ch;}
+  }
+  .map-placeholder{
+    margin-top:48px;
+    height:420px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .map-placeholder-inner{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+    color:var(--text-gray);
+  }
+  .map-placeholder-inner p{
+    font-size:var(--fs-sm);
+    font-weight:600;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+  }
+
+  /* ---------- How it works (2-col, no boxes) ---------- */
+  .flow-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:64px 80px;
+    position:relative;
+  }
+  .flow-step{
+    position:relative;
+  }
+  .flow-step .step-num{
+    font-size:var(--fs-sm);
+    font-weight:800;
+    letter-spacing:0.12em;
+    color:var(--blue-accent);
+    margin-bottom:16px;
+  }
+  .flow-step{text-align:center;}
+  .flow-step h3{
+    font-size:var(--fs-2xl);
+    margin-bottom:14px;
+    letter-spacing:-0.02em;
+  }
+  .flow-step p{
+    font-size:var(--fs-base);
+    color:var(--text-gray);
+    line-height:1.7;
+    max-width:42ch;
+    margin:0 auto;
+  }
+  .flow-divider{display:none;}
+  .flow-step{
+    background:var(--navy-deep);
+    border-radius:20px;
+    padding:56px 40px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-height:240px;
+  }
+  .flow-step .step-num{color:#8AAEFF !important;}
+  .flow-step h3{color:#fff;}
+  .flow-step p{color:#AEB8D6;}
+  .flow-step .arrow{display:none;}
+  @media (max-width:860px){
+    .flow-grid{grid-template-columns:1fr;gap:24px;}
+    .flow-step{padding:36px 28px;}
+  }
+
+  /* ---------- Impact ---------- */
+  .impact{
+    background:var(--navy-deep);
+    color:#fff;
+    text-align:center;
+  }
+  .impact .eyebrow-block p{color:#AEB8D6;}
+  .impact-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:32px 80px;
+    margin-top:64px;
+  }
+  .impact-stat{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .impact-stat .num{
+    font-size:var(--fs-stat);
+    font-weight:800;
+    color:#fff;
+    line-height:1;
+    margin-bottom:16px;
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+  }
+  .impact-stat .tag{
+    font-size:var(--fs-sm);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    white-space:normal;
+    color:#8AAEFF;
+    font-weight:700;
+    line-height:1.5;
+    text-align:center;
+  }
+  .impact-stat .stakeholder{
+    font-size:var(--fs-xs);
+    font-weight:800;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--navy-deep);
+    background:#8AAEFF;
+    border-radius:999px;
+    padding:4px 14px;
+    margin-bottom:16px;
+    display:inline-block;
+  }
+
+  /* ---------- Team ---------- */
+  #team{padding:48px 0;text-align:center;}
+  #team .eyebrow-block{margin-bottom:32px;}
+  #team .container{max-width:1400px;}
+  .team-grid{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:28px;
+  }
+  .team-card{
+    width:300px;
+    flex:0 0 300px;
+  }
+  @media (max-width:860px){
+    .team-grid{grid-template-columns:1fr;}
+  }
+  .team-card{
+    padding:28px 16px;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .avatar-photo{
+    width:260px;height:260px;
+    border-radius:50%;
+    -webkit-mask-image:-webkit-radial-gradient(white,black);
+    mask-image:radial-gradient(white,black);
+    object-fit:cover;
+    object-position:center 15%;
+    margin:0 auto 28px;
+    display:block;
+    overflow:hidden;
+  }
+  .team-card h4{
+    font-size:clamp(16px, 1.6vw, 22px);
+    margin-bottom:8px;
+    text-align:center !important;
+    width:100%;
+    display:block;
+  }
+  .team-card .role{
+    color:var(--blue-accent);
+    font-weight:700;
+    font-size:var(--fs-md);
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+  }
+  .team-card .desc{font-size:var(--fs-lg);color:var(--text-gray);}
+
+  /* ---------- Validation strip ---------- */
+  /* ---------- Contact / CTA ---------- */
+  .contact{
+    background:linear-gradient(135deg,var(--navy) 0%, #3C4F9C 100%);
+    color:#fff;
+    text-align:center;
+    border-radius:32px;
+    margin:0 32px;
+    padding:80px 32px;
+  }
+  @media (max-width:768px){
+    .contact{margin:0 12px;padding:56px 20px;}
+  }
+  .contact h2{margin-bottom:18px;}
+  .contact p{color:#C4CCE4;max-width:520px;margin:0 auto 32px;font-size:var(--fs-base);}
+  .contact-email{
+    font-size:18px;
+    font-weight:700;
+    margin-top:24px;
+  }
+  .contact-email a{color:#fff;border-bottom:2px solid var(--blue-light);}
+
+  /* ---------- Footer ---------- */
+  footer{
+    padding:48px 0 32px;
+    text-align:center;
+  }
+  footer .logo{justify-content:center;margin-bottom:12px;}
+  footer p{color:var(--text-gray);font-size:var(--fs-sm);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <a href="#home" class="logo">
+      <img src="images/Lumenate Medical.png" alt="Lumenate Medical" class="logo-img">
+    </a>
+    <nav class="nav-links">
+      <a href="#problem">Problem</a>
+      <a href="#approach">Approach</a>
+      <a href="#impact">Impact</a>
+      <a href="#team">Team</a>
+    </nav>
+    <div class="nav-right">
+      <a href="#contact" class="btn btn-primary">Get in Touch</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-blob b1"></div>
+  <div class="hero-blob b2"></div>
+  <!-- <img class="hero-image" src="images/Cysto-1.png" alt="Cystoscopy device"> -->
+  <div class="hero-text">
+    <h1><span class="hero-line">Bladder cancer doesn't wait.</span><span class="hero-line accent">Neither should screening.</span></h1>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<div class="partners">
+  <div class="partners-label">With Support From:</div>
+  <div class="marquee">
+    <img src="images/WSE.webp" alt="Johns Hopkins Whiting School of Engineering">
+    <img src="images/CBID.webp" alt="Center for Bioengineering Innovation &amp; Design">
+    <img src="images/Abell.png" alt="Abell Foundation">
+    <img src="images/AUA.png" alt="American Urological Association">
+    <img src="images/Pioneer.png" alt="Pioneer">
+    <img src="images/Propel.png" alt="Propel">
+    <img src="images/TU.png" alt="Towson University">
+    <img src="images/pava.jpg" alt="PAVA">
+    <img src="images/WSE.webp" alt="Johns Hopkins Whiting School of Engineering">
+    <img src="images/CBID.webp" alt="Center for Bioengineering Innovation &amp; Design">
+    <img src="images/Abell.png" alt="Abell Foundation">
+    <img src="images/AUA.png" alt="American Urological Association">
+    <img src="images/Pioneer.png" alt="Pioneer">
+    <img src="images/Propel.png" alt="Propel">
+    <img src="images/TU.png" alt="Towson University">
+    <img src="images/pava.jpg" alt="PAVA">
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem" class="problem">
+  <div class="container">
+    <div class="problem-head reveal">
+      <span class="pill">The Problem</span>
+      <h2>Millions wait <span class="accent-red">months</span> for a screening that could save their life.</h2>
+      <p>Bladder cancer is most treatable when caught early, yet the specialists who screen for it are concentrated in a shrinking number of places. For most patients, access depends on geography and a long wait for an appointment.</p>
+    </div>
+    <div class="problem-stats reveal-stagger">
+      <div class="stat-box">
+        <div class="num">20M</div>
+        <p>present annually with symptoms requiring cystoscopy evaluation</p>
+      </div>
+      <div class="stat-box">
+        <div class="num">63%</div>
+        <p>of U.S. counties have no practicing urologist</p>
+      </div>
+      <div class="stat-box">
+        <div class="num">$6.5B</div>
+        <p>annual burden to the healthcare system</p>
+      </div>
+    </div>
+
+    <div class="map-placeholder reveal">
+      <img src="images/County.png" alt="U.S. county map showing urologist access gaps" style="width:100%;height:100%;object-fit:contain;border-radius:var(--radius);">
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS / APPROACH -->
+<section id="approach">
+  <div class="container">
+    <div class="eyebrow-block reveal">
+      <span class="pill">Our Approach</span>
+      <h2>Enabling providers <span class="accent">already in every community</span> to deliver the screening patients need.</h2>
+      <p>Lumenate Medical enables non-urologist providers to safely perform bladder cancer screening, with specialist oversight built in. No new urologists required.</p>
+    </div>
+    <div class="flow-grid reveal-stagger" style="margin-top:48px;">
+      <div class="flow-step">
+        <div class="step-num">STEP 01</div>
+        <h3>Image collection by <span class="accent">non-urologist providers</span></h3>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">STEP 02</div>
+        <h3><span class="accent">Asynchronous</span> image review by urologists</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- IMPACT -->
+<section id="impact" class="impact">
+  <div class="container">
+    <div class="eyebrow-block reveal">
+      <span class="pill dark">The Impact</span>
+      <h2>Better outcomes for everyone in the system.</h2>
+      <p>Earlier diagnosis and expanded access create measurable value for patients, providers, practices, and payers alike.</p>
+    </div>
+    <div class="impact-grid reveal-stagger">
+      <div class="impact-stat">
+        <div class="stakeholder">Payers</div>
+        <div class="num" data-prefix="$" data-target="2" data-decimals="1" data-suffix="B">$2.0B</div>
+        <div class="tag">Reduction in annual payer expenditure<br>by diagnosing one stage earlier</div>
+      </div>
+      <div class="impact-stat">
+        <div class="stakeholder">Patients</div>
+        <div class="num" data-prefix="" data-target="50" data-suffix="%">50%</div>
+        <div class="tag">Reduction in patient out-of-pocket costs<br>vs. late-stage diagnoses</div>
+      </div>
+      <div class="impact-stat">
+        <div class="stakeholder">Urologists</div>
+        <div class="num" data-prefix="" data-target="350" data-suffix="+ hours" style="white-space:nowrap;">350+ hours</div>
+        <div class="tag">Freed per year, per urologist,<br>for higher-complexity procedures</div>
+      </div>
+      <div class="impact-stat">
+        <div class="stakeholder">Practices</div>
+        <div class="num" data-prefix="$" data-target="1.5" data-decimals="1" data-suffix="M">$1.5M</div>
+        <div class="tag">In additional annual revenue<br>from expanded screening capacity</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="container">
+    <div class="eyebrow-block reveal">
+      <span class="pill">Team</span>
+    </div>
+
+    <div class="team-grid reveal-stagger">
+      <div class="team-card">
+        <img src="images/Haley.jpeg" alt="Haley Slosberg" class="avatar-photo">
+        <h4>Haley Slosberg,<br>M.S.E.</h4>
+        <div class="role">Co-founder<br>CEO</div>
+      </div>
+      <div class="team-card">
+        <img src="images/Jack.png" alt="Jack Darbonne" class="avatar-photo" style="object-position:center 10%;">
+        <h4>Jack Darbonne,<br>M.S.E.</h4>
+        <div class="role">Co-founder<br>CTO</div>
+      </div>
+      <div class="team-card">
+        <img src="images/Anand.png" alt="Anand Vaish" class="avatar-photo">
+        <h4>Anand Vaish,<br>M.S.E.</h4>
+        <div class="role">Co-founder<br>COO</div>
+      </div>
+      <div class="team-card">
+        <img src="images/arunrai.jpeg" alt="Arun Rai" class="avatar-photo">
+        <h4>Arun Rai,<br>MD, MBA</h4>
+        <div class="role">Head of Clinical Affairs</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact">
+    <h2>Let's reduce the time patients spend in the dark.</h2>
+    <p>Whether you're a clinician, partner, or investor interested in expanding access to bladder cancer screening, we'd love to hear from you.</p>
+    <a href="mailto:hello@lumenatemedical.com" class="btn btn-light">Get in Touch</a>
+    <div class="contact-email"><a href="mailto:hello@lumenatemedical.com">hello@lumenatemedical.com</a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <a href="#home" class="logo">
+      <img src="images/Lumenate Medical.png" alt="Lumenate Medical" class="logo-img">
+    </a>
+    <p>&copy; 2026 Lumenate Medical. Bladder screening without the wait.</p>
+  </div>
+</footer>
+
+<script>
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => {
+    revealObserver.observe(el);
+  });
+
+  function animateNum(el) {
+    const target = parseFloat(el.dataset.target);
+    const decimals = parseInt(el.dataset.decimals || '0');
+    const prefix = el.dataset.prefix || '';
+    const suffix = el.dataset.suffix || '';
+    const duration = 1600;
+    const start = performance.now();
+    function step(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = eased * target;
+      el.textContent = prefix + value.toFixed(decimals) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  const tickerObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateNum(entry.target);
+        tickerObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.impact-stat .num[data-target]').forEach(el => {
+    tickerObserver.observe(el);
+  });
+</script>
+
+</body>
+</html>
