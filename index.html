@@ -516,9 +516,9 @@
     .problem-stats{grid-template-columns:1fr;}
   }
   @media (max-width:768px){
+    .hero h1{white-space:normal;font-size:clamp(34px, 8vw, 56px);}
+    .hero-line{white-space:normal;}
     .hero-stats{grid-template-columns:1fr;gap:40px;margin-top:48px;}
-    .impact-grid{grid-template-columns:1fr;gap:48px;}
-    .impact-stat .tag{white-space:normal;max-width:28ch;}
   }
   .map-placeholder{
     margin-top:48px;
@@ -640,6 +640,11 @@
     padding:4px 14px;
     margin-bottom:16px;
     display:inline-block;
+  }
+  @media (max-width:768px){
+    .impact-grid{grid-template-columns:1fr;gap:48px;}
+    .impact-stat .num{font-size:clamp(40px, 12vw, 64px);white-space:normal;}
+    .impact-stat .tag{white-space:normal;max-width:28ch;}
   }
 
   /* ---------- Team ---------- */
