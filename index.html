@@ -758,7 +758,9 @@ footer {
     mask-image: linear-gradient(90deg, transparent 0%, black 12%, black 88%, transparent 100%);
   }
   .traction-track { gap: 36px; }
-  .traction-track img { height: 38px; }
+  /* JS spotlight is disabled on mobile — show logos at a fixed bright opacity;
+     the edge-mask above handles the left/right fade. */
+  .traction-track img { height: 38px; opacity: 0.85; }
 
   /* CONTACT + FOOTER */
   .footer-top { flex-direction: column; gap: 8px; text-align: center; align-items: center; }
@@ -1124,19 +1126,32 @@ document.addEventListener('click', e => {
   if (!wrap || !logos.length) return;
 
   const MAX = 1.0;    // opacity dead-center
+  const MIN = 0.12;   // opacity at the edges
+  const POWER = 2.4;  // falloff curve (higher = tighter spotlight)
 
-  // On narrow screens the band is small and logos rush past center, so use a
-  // higher floor + gentler falloff so they actually read as bright in the middle.
-  function params() {
-    const mobile = window.innerWidth <= 820;
-    return mobile
-      ? { MIN: 0.42, POWER: 1.25 }   // mobile: readable, broad bright zone
-      : { MIN: 0.12, POWER: 2.4 };   // desktop: dramatic, tight spotlight
+  // The moving JS spotlight is unreliable on real phones (visual-viewport quirks
+  // on a fast, narrow marquee). On mobile we skip it entirely and let CSS show
+  // logos at a fixed bright opacity with the edge-mask doing the fade.
+  const MOBILE_BP = 820;
+  let running = false;
+
+  function start() {
+    if (running) return;
+    running = true;
+    requestAnimationFrame(frame);
   }
-  let P = params();
-  window.addEventListener('resize', () => { P = params(); }, { passive: true });
+  function stop() {
+    running = false;
+    // hand control back to CSS by clearing inline opacity
+    logos.forEach(img => { img.style.opacity = ''; });
+  }
+  function sync() {
+    if (window.innerWidth > MOBILE_BP) start();
+    else stop();
+  }
 
   function frame() {
+    if (!running) return;
     // READ pass — batch all measurements first (single reflow, no thrash)
     const wrapRect = wrap.getBoundingClientRect();
     // Use the VISIBLE band span (intersection of wrap with viewport) so the
@@ -1149,15 +1164,17 @@ document.addEventListener('click', e => {
       const r = img.getBoundingClientRect();
       const imgCenter = r.left + r.width / 2;
       const dist = Math.min(Math.abs(imgCenter - center) / halfRange, 1);
-      const t = Math.pow(dist, P.POWER);
-      return (MAX - (MAX - P.MIN) * t).toFixed(3);
+      const t = Math.pow(dist, POWER);
+      return (MAX - (MAX - MIN) * t).toFixed(3);
     });
     // WRITE pass — apply after all reads
     for (let i = 0; i < logos.length; i++) logos[i].style.opacity = opacities[i];
 
     requestAnimationFrame(frame);
   }
-  requestAnimationFrame(frame);
+
+  sync();
+  window.addEventListener('resize', sync, { passive: true });
 })();
 
 /* ── SCROLL REVEAL ── */
