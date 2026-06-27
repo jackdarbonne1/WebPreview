@@ -94,10 +94,13 @@ nav {
   justify-content: space-between;
   padding: 0 52px;
   height: 62px;
-  background: rgba(255,255,255,0.92);
+  background: rgba(244,247,255,0.86);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(5,7,13,0.08);
+  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  will-change: transform;
 }
+nav.nav-hidden { transform: translateY(-100%); }
 
 .logo {
   display: flex; align-items: center; gap: 10px;
@@ -130,6 +133,61 @@ nav::before { display: none; }
   transition: background 0.18s, border-color 0.18s;
 }
 .nav-cta:hover { background: rgba(74,135,245,0.16); border-color: rgba(74,135,245,0.55); }
+
+/* ── MOBILE MENU ── */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px; height: 40px;
+  padding: 9px 8px;
+  background: none; border: none;
+  cursor: pointer;
+}
+.nav-toggle span {
+  display: block;
+  height: 2px; width: 100%;
+  background: #1a2440;
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.2s;
+}
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-menu {
+  position: fixed;
+  top: 62px; left: 0; right: 0;
+  z-index: 490;
+  background: rgba(244,247,255,0.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(5,7,13,0.08);
+  display: flex;
+  flex-direction: column;
+  padding: 8px 24px 20px;
+  transform: translateY(-12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.25s;
+}
+.mobile-menu.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+.mobile-menu a {
+  text-decoration: none;
+  font-size: 17px; font-weight: 500;
+  color: #1a2440;
+  padding: 14px 4px;
+  border-bottom: 1px solid rgba(5,7,13,0.07);
+}
+.mobile-menu a:last-child { border-bottom: none; }
+.mobile-menu-cta {
+  margin-top: 14px;
+  text-align: center;
+  color: var(--accent) !important;
+  border: 1px solid rgba(74,135,245,0.32);
+  border-radius: 6px;
+  background: rgba(74,135,245,0.08);
+}
 
 /* ── HERO ── */
 .hero {
@@ -544,7 +602,9 @@ footer {
 
 /* ── TRACTION BANNER ── */
 .traction-bar {
-  background: linear-gradient(180deg, var(--bg) 0%, #b8cfe8 18%, #c8daf0 50%, #b8cfe8 82%, var(--bg) 100%);
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   padding: 36px 0;
   display: flex;
   align-items: center;
@@ -559,7 +619,7 @@ footer {
   font-weight: 700;
   letter-spacing: 2.5px;
   text-transform: uppercase;
-  color: #1a2a4a;
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
@@ -582,16 +642,16 @@ footer {
   height: 52px;
   width: auto;
   object-fit: contain;
-  filter: grayscale(1);
-  opacity: 0.45;
-  transition: filter 0.3s, opacity 0.3s;
+  opacity: 0.62;          /* fallback; JS drives a center-spotlight */
   flex-shrink: 0;
   cursor: default;
+  will-change: opacity;
 }
 
-.traction-track img:hover {
-  filter: grayscale(0);
-  opacity: 1;
+/* Logos with a solid/opaque background just get rounded corners
+   so they sit nicely on the dark band. */
+.traction-track img.solid-logo {
+  border-radius: 8px;
 }
 
 @keyframes marquee {
@@ -653,17 +713,51 @@ footer {
 @media (max-width: 820px) {
   body { cursor: auto; }
   #cursor-blob, #cursor-dot { display: none; }
-  nav { padding: 0 24px; }
+
+  nav { padding: 0 20px; }
   .nav-links { display: none; }
-  .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; }
-  .hero-right { order: -1; }
-  .product-hero-img { max-width: 280px; }
-  section { padding: 80px 24px; }
+  .nav-cta { display: none; }
+  .nav-toggle { display: flex; }
+  .logo img { height: 34px; }
+
+  /* HERO */
+  .hero { padding: 96px 24px 56px; min-height: auto; }
+  .hero h1 { letter-spacing: -1.5px; }
+  .hero-sub { max-width: 100%; }
+  .hero-cysto-img { width: 100%; opacity: 0.30; object-position: center; }
+  .hero-left { max-width: 100%; }
+
+  section { padding: 72px 24px; }
+
+  /* PROBLEM stats */
   .stats-row { grid-template-columns: 1fr; border-top: none; }
   .stat-item { border-right: none; border-top: 1px solid var(--border); padding: 30px 0 !important; }
-  .product-inner, .approach-header, .contact-inner { grid-template-columns: 1fr; gap: 48px; }
-  .steps, .impact-grid, .team-grid { grid-template-columns: 1fr; }
-  footer { flex-direction: column; gap: 8px; text-align: center; }
+  .stat-desc { max-width: 100%; }
+
+  /* multi-column blocks collapse */
+  .product-inner, .approach-header, .contact-inner { grid-template-columns: 1fr; gap: 40px; }
+  .steps, .impact-grid, .team-grid, .team-grid-1, .team-grid-2 { grid-template-columns: 1fr; }
+
+  /* TEAM — override inline grid/flex */
+  .founders-grid { grid-template-columns: 1fr !important; }
+  .advisors-row { flex-direction: column !important; gap: 1px !important; }
+  .advisor-card { flex: 1 1 auto !important; width: 100%; }
+  .member-name { white-space: normal !important; }
+  .impact-desc, .member-title { max-width: 100%; }
+
+  /* TRACTION band */
+  .traction-bar { flex-direction: column; align-items: flex-start; gap: 18px; padding: 28px 0; }
+  .traction-label { padding-left: 24px; }
+  .traction-track img { height: 40px; }
+
+  /* CONTACT + FOOTER */
+  .footer-top { flex-direction: column; gap: 8px; text-align: center; align-items: center; }
+  .footer-disclaimer { font-size: 11px; }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 44px; letter-spacing: -1px; }
+  section { padding: 60px 20px; }
 }
 </style>
 </head>
@@ -685,7 +779,20 @@ footer {
     <li><a href="#team">Team</a></li>
   </ul>
   <a class="nav-cta" href="#contact">Get in Touch</a>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#problem">Problem</a>
+  <a href="#product">Device</a>
+  <a href="#approach">Approach</a>
+  <a href="#impact">Impact</a>
+  <a href="#team">Team</a>
+  <a href="#contact" class="mobile-menu-cta">Get in Touch</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -731,7 +838,7 @@ footer {
       <img src="images/traction_logos/Pioneer.png" alt="Pioneer" />
       <img src="images/traction_logos/Propel.png" alt="Propel" />
       <img src="images/traction_logos/startup-logo-horizontal.png" alt="TU Startup" />
-      <img src="images/traction_logos/pava_logo.jpeg" alt="Pava" />
+      <img src="images/traction_logos/pava_logo.jpeg" alt="Pava" class="solid-logo" />
       <!-- duplicate set for seamless loop -->
       <img src="images/traction_logos/jhu-biomedical-engineering.png" alt="JHU Engineering" aria-hidden="true" />
       <img src="images/traction_logos/CBID logo transparent.png" alt="JHU CBID" aria-hidden="true" />
@@ -742,7 +849,7 @@ footer {
       <img src="images/traction_logos/Pioneer.png" alt="Pioneer" aria-hidden="true" />
       <img src="images/traction_logos/Propel.png" alt="Propel" aria-hidden="true" />
       <img src="images/traction_logos/startup-logo-horizontal.png" alt="TU Startup" aria-hidden="true" />
-      <img src="images/traction_logos/pava_logo.jpeg" alt="Pava" aria-hidden="true" />
+      <img src="images/traction_logos/pava_logo.jpeg" alt="Pava" aria-hidden="true" class="solid-logo" />
     </div>
   </div>
 </div>
@@ -861,7 +968,7 @@ footer {
     <div class="label reveal">Team</div>
     <h2 class="team-headline reveal reveal-delay-1">The people<br>behind Lumenate.</h2>
 
-    <div style="display:grid; grid-template-columns: repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:1px;">
+    <div class="founders-grid" style="display:grid; grid-template-columns: repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:1px;">
       <div class="member reveal-scale">
         <img class="member-photo" src="images/SLOSBERG, HALEY.jpeg" alt="Haley Slosberg" />
         <div class="member-name">Haley Slosberg, M.S.E.</div>
@@ -889,14 +996,14 @@ footer {
     </div>
 
     <div class="team-section-label reveal" style="margin-top: 48px;">Advisors</div>
-    <div style="display:flex; justify-content:center; gap:24px;">
-      <div class="member reveal-scale" style="flex:0 0 calc(32% - 12px); border:1px solid var(--border); border-radius:12px;">
+    <div class="advisors-row" style="display:flex; justify-content:center; gap:24px;">
+      <div class="member advisor-card reveal-scale" style="flex:0 0 calc(32% - 12px); border:1px solid var(--border); border-radius:12px;">
         <img class="member-photo" src="images/moallaf.jpg" alt="Dr. Mohammad Allaf" />
-        <div class="member-name" style="white-space:nowrap;">Dr. Mohammad Allaf, M.D.</div>
+        <div class="member-name">Dr. Mohammad Allaf, M.D.</div>
         <div class="member-role">Advisor</div>
         <div class="member-title">Urologist-in-Chief and Director, Department of Urology, Johns Hopkins</div>
       </div>
-      <div class="member reveal-scale reveal-delay-1" style="flex:0 0 calc(32% - 12px); border:1px solid var(--border); border-radius:12px;">
+      <div class="member advisor-card reveal-scale reveal-delay-1" style="flex:0 0 calc(32% - 12px); border:1px solid var(--border); border-radius:12px;">
         <img class="member-photo" src="images/jeesin.png" alt="Jee Shin" />
         <div class="member-name">Jee Shin, M.B.A.</div>
         <div class="member-role">Advisor</div>
@@ -915,10 +1022,10 @@ footer {
       <p class="contact-sub reveal reveal-delay-2">Interested in partnering, investing, or learning more about Lumenate Medical? We'd love to hear from you.</p>
     </div>
     <form class="contact-form reveal reveal-delay-1" onsubmit="handleSubmit(event)">
-      <input type="text" placeholder="Your name" required />
-      <input type="email" placeholder="Email address" required />
-      <input type="text" placeholder="Organization" />
-      <textarea placeholder="Message"></textarea>
+      <input id="cf-name" type="text" placeholder="Your name" required />
+      <input id="cf-email" type="email" placeholder="Email address" required />
+      <input id="cf-org" type="text" placeholder="Organization" />
+      <textarea id="cf-message" placeholder="Message"></textarea>
       <button type="submit" class="btn-primary" style="width:fit-content;padding:12px 26px;cursor:none;">Send message</button>
     </form>
   </div>
@@ -930,7 +1037,7 @@ footer {
     <span>hello@lumenatemedical.com</span>
   </div>
   <p class="footer-disclaimer">
-    Lumenate Medical's device is in development and is not available for sale. It has not been cleared or approved by the U.S. Food and Drug Administration. Statements on this site are forward-looking and describe the company's goals and a product in development; they do not represent established safety or efficacy.
+    Lumenate Medical's device is in development and is not available for sale. It has not been cleared or approved by the U.S. Food and Drug Administration.
   </p>
 </footer>
 
@@ -948,6 +1055,84 @@ document.addEventListener('mousemove', e => {
   by += (my - by) * 0.06;
   blob.style.left = bx + 'px'; blob.style.top = by + 'px';
   requestAnimationFrame(animateBlob);
+})();
+
+/* ── MOBILE MENU ── */
+const navToggle = document.getElementById('nav-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+function closeMenu() {
+  navToggle.classList.remove('open');
+  mobileMenu.classList.remove('open');
+  navToggle.setAttribute('aria-expanded', 'false');
+}
+function toggleMenu() {
+  const willOpen = !mobileMenu.classList.contains('open');
+  navToggle.classList.toggle('open', willOpen);
+  mobileMenu.classList.toggle('open', willOpen);
+  navToggle.setAttribute('aria-expanded', String(willOpen));
+}
+navToggle.addEventListener('click', toggleMenu);
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+document.addEventListener('click', e => {
+  if (mobileMenu.classList.contains('open') &&
+      !mobileMenu.contains(e.target) && !navToggle.contains(e.target)) {
+    closeMenu();
+  }
+});
+
+/* ── HIDE NAV ON SCROLL DOWN, SHOW ON SCROLL UP ── */
+(function () {
+  const navEl = document.querySelector('nav');
+  let lastY = window.scrollY;
+  let ticking = false;
+  const DELTA = 6;        // ignore tiny jitters
+  const TOP_LOCK = 80;    // always show near the very top
+
+  function update() {
+    const y = window.scrollY;
+    if (Math.abs(y - lastY) > DELTA) {
+      if (y > lastY && y > TOP_LOCK) {
+        navEl.classList.add('nav-hidden');     // scrolling down
+        closeMenu();                           // don't leave menu floating
+      } else {
+        navEl.classList.remove('nav-hidden');  // scrolling up
+      }
+      lastY = y;
+    }
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(update); ticking = true; }
+  }, { passive: true });
+})();
+
+/* ── TRACTION SPOTLIGHT: bright in the middle, dim toward the edges ── */
+(function () {
+  const wrap = document.querySelector('.traction-track-wrap');
+  const logos = document.querySelectorAll('.traction-track img');
+  if (!wrap || !logos.length) return;
+
+  const MIN = 0.22;   // opacity at the far edges
+  const MAX = 1.0;    // opacity dead-center
+  const POWER = 1.6;  // falloff curve (higher = tighter spotlight)
+
+  function frame() {
+    const rect = wrap.getBoundingClientRect();
+    const center = rect.left + rect.width / 2;
+    const halfRange = rect.width / 2;
+
+    logos.forEach(img => {
+      const r = img.getBoundingClientRect();
+      const imgCenter = r.left + r.width / 2;
+      // 0 at center → 1 at the edges
+      let dist = Math.min(Math.abs(imgCenter - center) / halfRange, 1);
+      const t = Math.pow(dist, POWER);
+      img.style.opacity = (MAX - (MAX - MIN) * t).toFixed(3);
+    });
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
 })();
 
 /* ── SCROLL REVEAL ── */
@@ -997,11 +1182,31 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 });
 
 
-/* ── FORM ── */
+/* ── FORM (mailto fallback) ── */
 function handleSubmit(e) {
   e.preventDefault();
-  const btn = e.target.querySelector('button');
-  btn.textContent = 'Sent ✓'; btn.disabled = true;
+  const form  = e.target;
+  const name  = (document.getElementById('cf-name').value || '').trim();
+  const email = (document.getElementById('cf-email').value || '').trim();
+  const org   = (document.getElementById('cf-org').value || '').trim();
+  const msg   = (document.getElementById('cf-message').value || '').trim();
+
+  const subject = `Website inquiry from ${name || 'a visitor'}`;
+  const body =
+    `Name: ${name}\n` +
+    `Email: ${email}\n` +
+    `Organization: ${org}\n\n` +
+    `${msg}\n`;
+
+  const mailto = `mailto:hello@lumenatemedical.com` +
+    `?subject=${encodeURIComponent(subject)}` +
+    `&body=${encodeURIComponent(body)}`;
+
+  // Open the visitor's email client with the message pre-filled.
+  window.location.href = mailto;
+
+  const btn = form.querySelector('button');
+  btn.textContent = 'Opening email…'; btn.disabled = true;
   setTimeout(() => { btn.textContent = 'Send message'; btn.disabled = false; }, 3000);
 }
 </script>
