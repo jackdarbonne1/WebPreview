@@ -1110,26 +1110,28 @@ document.addEventListener('click', e => {
 /* ── TRACTION SPOTLIGHT: bright in the middle, dim toward the edges ── */
 (function () {
   const wrap = document.querySelector('.traction-track-wrap');
-  const logos = document.querySelectorAll('.traction-track img');
+  const logos = Array.from(document.querySelectorAll('.traction-track img'));
   if (!wrap || !logos.length) return;
 
-  const MIN = 0.22;   // opacity at the far edges
+  const MIN = 0.12;   // opacity at the far edges (lower = stronger contrast)
   const MAX = 1.0;    // opacity dead-center
-  const POWER = 1.6;  // falloff curve (higher = tighter spotlight)
+  const POWER = 2.4;  // falloff curve (higher = tighter, more obvious spotlight)
 
   function frame() {
-    const rect = wrap.getBoundingClientRect();
-    const center = rect.left + rect.width / 2;
-    const halfRange = rect.width / 2;
-
-    logos.forEach(img => {
+    // READ pass — batch all measurements first (single reflow, no thrash)
+    const wrapRect = wrap.getBoundingClientRect();
+    const center = wrapRect.left + wrapRect.width / 2;
+    const halfRange = wrapRect.width / 2;
+    const opacities = logos.map(img => {
       const r = img.getBoundingClientRect();
       const imgCenter = r.left + r.width / 2;
-      // 0 at center → 1 at the edges
-      let dist = Math.min(Math.abs(imgCenter - center) / halfRange, 1);
+      const dist = Math.min(Math.abs(imgCenter - center) / halfRange, 1);
       const t = Math.pow(dist, POWER);
-      img.style.opacity = (MAX - (MAX - MIN) * t).toFixed(3);
+      return (MAX - (MAX - MIN) * t).toFixed(3);
     });
+    // WRITE pass — apply after all reads
+    for (let i = 0; i < logos.length; i++) logos[i].style.opacity = opacities[i];
+
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
