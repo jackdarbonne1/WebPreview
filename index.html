@@ -22,7 +22,7 @@
   --red: #ef4949;
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100%; }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -746,9 +746,19 @@ footer {
   .impact-desc, .member-title { max-width: 100%; }
 
   /* TRACTION band */
-  .traction-bar { flex-direction: column; align-items: flex-start; gap: 18px; padding: 28px 0; }
+  .traction-bar { flex-direction: column; align-items: stretch; gap: 16px; padding: 26px 0; }
   .traction-label { padding-left: 24px; }
-  .traction-track img { height: 40px; }
+  /* keep the track clipped to viewport so it doesn't cause horizontal scroll,
+     and shorten the edge fades so they're visible on a narrow screen */
+  .traction-track-wrap {
+    width: 100%;
+    max-width: 100%;
+    flex: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 12%, black 88%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, black 12%, black 88%, transparent 100%);
+  }
+  .traction-track { gap: 36px; }
+  .traction-track img { height: 38px; }
 
   /* CONTACT + FOOTER */
   .footer-top { flex-direction: column; gap: 8px; text-align: center; align-items: center; }
@@ -1113,21 +1123,34 @@ document.addEventListener('click', e => {
   const logos = Array.from(document.querySelectorAll('.traction-track img'));
   if (!wrap || !logos.length) return;
 
-  const MIN = 0.12;   // opacity at the far edges (lower = stronger contrast)
   const MAX = 1.0;    // opacity dead-center
-  const POWER = 2.4;  // falloff curve (higher = tighter, more obvious spotlight)
+
+  // On narrow screens the band is small and logos rush past center, so use a
+  // higher floor + gentler falloff so they actually read as bright in the middle.
+  function params() {
+    const mobile = window.innerWidth <= 820;
+    return mobile
+      ? { MIN: 0.42, POWER: 1.25 }   // mobile: readable, broad bright zone
+      : { MIN: 0.12, POWER: 2.4 };   // desktop: dramatic, tight spotlight
+  }
+  let P = params();
+  window.addEventListener('resize', () => { P = params(); }, { passive: true });
 
   function frame() {
     // READ pass — batch all measurements first (single reflow, no thrash)
     const wrapRect = wrap.getBoundingClientRect();
-    const center = wrapRect.left + wrapRect.width / 2;
-    const halfRange = wrapRect.width / 2;
+    // Use the VISIBLE band span (intersection of wrap with viewport) so the
+    // bright point is always the on-screen middle, even if the track overflows.
+    const visLeft  = Math.max(wrapRect.left, 0);
+    const visRight = Math.min(wrapRect.right, window.innerWidth);
+    const center = (visLeft + visRight) / 2;
+    const halfRange = Math.max((visRight - visLeft) / 2, 1);
     const opacities = logos.map(img => {
       const r = img.getBoundingClientRect();
       const imgCenter = r.left + r.width / 2;
       const dist = Math.min(Math.abs(imgCenter - center) / halfRange, 1);
-      const t = Math.pow(dist, POWER);
-      return (MAX - (MAX - MIN) * t).toFixed(3);
+      const t = Math.pow(dist, P.POWER);
+      return (MAX - (MAX - P.MIN) * t).toFixed(3);
     });
     // WRITE pass — apply after all reads
     for (let i = 0; i < logos.length; i++) logos[i].style.opacity = opacities[i];
