@@ -412,15 +412,15 @@ section { padding: 112px 52px; }
 .approach-inner { max-width: 1100px; margin: 0 auto; }
 
 .approach-header {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 48px; margin-bottom: 72px; align-items: end;
+  margin-bottom: 72px;
 }
 .approach-headline {
   font-size: clamp(32px, 4.5vw, 56px);
   font-weight: 700; line-height: 1.05; letter-spacing: -2px;
+  max-width: 800px; margin-bottom: 28px;
 }
 .approach-headline .blue { color: var(--accent-bright); }
-.approach-desc { font-size: 17px; color: var(--text-muted); line-height: 1.72; }
+.approach-desc { font-size: 17px; color: var(--text-muted); line-height: 1.72; max-width: 620px; }
 
 .steps {
   display: grid; grid-template-columns: repeat(3, 1fr);
@@ -917,12 +917,10 @@ footer {
 <section id="approach">
   <div class="approach-inner">
     <div class="approach-header">
-      <div>
-        <div class="label reveal">Our Approach</div>
-        <h2 class="approach-headline reveal reveal-delay-1">
-          Enabling providers <span class="blue">already in every community</span> to deliver the screening patients need.
-        </h2>
-      </div>
+      <div class="label reveal">Our Approach</div>
+      <h2 class="approach-headline reveal reveal-delay-1">
+        Enabling providers <span class="blue">already in every community</span> to deliver the screening patients need.
+      </h2>
       <p class="approach-desc reveal reveal-delay-2">
         Lumenate Medical aims to enable non-urologist providers — Physician Associates and Nurse Practitioners — to perform bladder cancer screening, with specialist oversight built in. Multiplying what the existing urology workforce can reach.
       </p>
@@ -931,12 +929,12 @@ footer {
       <div class="step reveal-scale">
         <div class="step-num">Step 01</div>
         <div class="step-title">Image collection by <span class="blue">non-urologist providers</span>, such as PAs &amp; NPs</div>
-        <div class="step-body">Community providers would use Lumenate's device to capture cystoscopy images with minimal training and built-in guidance.</div>
+        <div class="step-body">Community providers use Lumenate's device to capture cystoscopy images with minimal training and built-in guidance.</div>
       </div>
       <div class="step reveal-scale reveal-delay-1">
         <div class="step-num">Step 02</div>
         <div class="step-title"><span class="blue">Asynchronous</span> image review by urologists</div>
-        <div class="step-body">Board-certified urologists would review images remotely on their schedule — no patient visit required.</div>
+        <div class="step-body">Board-certified urologists review images remotely on their schedule — no patient visit required.</div>
       </div>
       <div class="step reveal-scale reveal-delay-2">
         <div class="step-num">Impact</div>
