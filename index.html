@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lumenate Medical</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #05070d;
+  --bg-2: #090c18;
+  --bg-3: #0c1020;
+  --border: rgba(255,255,255,0.07);
+  --border-blue: rgba(91,156,246,0.22);
+  --text: #eef2ff;
+  --text-muted: rgba(238,242,255,0.68);
+  --text-dim: rgba(238,242,255,0.42);
+  --accent: #4a87f5;
+  --accent-bright: #78aff9;
+  --accent-dim: rgba(74,135,245,0.12);
+  --red: #ef4949;
+}
+
+/* overflow-x: clip (not hidden) — hidden creates a scroll container on body,
+   which silently disables position: sticky for the problem-section story */
+html { scroll-behavior: smooth; overflow-x: clip; max-width: 100%; }
+
+body {
+  font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  cursor: none;
+}
+
+/* ── CURSOR ── */
+#cursor-blob {
+  position: fixed;
+  width: 520px; height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(74,135,245,0.11) 0%, transparent 68%);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
+  will-change: left, top;
+}
+#cursor-dot {
+  position: fixed;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent-bright);
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: width 0.18s, height 0.18s, opacity 0.18s;
+}
+body:has(a:hover) #cursor-dot,
+body:has(button:hover) #cursor-dot { width: 12px; height: 12px; opacity: 0.5; }
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.42s; }
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.93) translateY(16px);
+  transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal-scale.visible { opacity: 1; transform: scale(1) translateY(0); }
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-28px);
+  transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 52px;
+  height: 62px;
+  background: rgba(244,247,255,0.86);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(5,7,13,0.08);
+  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  will-change: transform;
+}
+nav.nav-hidden { transform: translateY(-100%); }
+
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.logo img {
+  height: 44px; width: auto;
+  object-fit: contain;
+}
+
+nav::before { display: none; }
+
+.nav-links { display: flex; gap: 10px; list-style: none; }
+.nav-links a {
+  text-decoration: none;
+  font-size: 15px; font-weight: 400;
+  color: rgba(5,7,13,0.62);
+  display: flex; align-items: center;
+  padding: 8px 13px;
+  border-radius: 7px;
+  transition: color 0.18s, background 0.22s;
+}
+.nav-links a:hover {
+  color: #05070d;
+  background: rgba(5,7,13,0.055);
+}
+.nav-ico {
+  display: flex; align-items: center;
+  width: 0; opacity: 0; overflow: hidden;
+  margin-right: 0;
+  color: var(--accent);
+  transition: width 0.26s cubic-bezier(0.16,1,0.3,1), opacity 0.18s, margin-right 0.26s cubic-bezier(0.16,1,0.3,1);
+}
+.nav-ico svg { width: 15px; height: 15px; flex-shrink: 0; }
+.nav-links a:hover .nav-ico { width: 15px; opacity: 1; margin-right: 8px; }
+
+.nav-cta {
+  text-decoration: none;
+  font-size: 15px; font-weight: 500;
+  color: var(--accent);
+  border: 1px solid rgba(74,135,245,0.32);
+  border-radius: 5px;
+  padding: 7px 16px;
+  background: rgba(74,135,245,0.08);
+  transition: background 0.18s, border-color 0.18s;
+}
+.nav-cta:hover { background: rgba(74,135,245,0.16); border-color: rgba(74,135,245,0.55); }
+
+/* ── MOBILE MENU ── */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px; height: 40px;
+  padding: 9px 8px;
+  background: none; border: none;
+  cursor: pointer;
+}
+.nav-toggle span {
+  display: block;
+  height: 2px; width: 100%;
+  background: #1a2440;
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.2s;
+}
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-menu {
+  position: fixed;
+  top: 62px; left: 0; right: 0;
+  z-index: 490;
+  background: rgba(244,247,255,0.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(5,7,13,0.08);
+  display: flex;
+  flex-direction: column;
+  padding: 8px 24px 20px;
+  transform: translateY(-12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.25s;
+}
+.mobile-menu.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+.mobile-menu a {
+  text-decoration: none;
+  font-size: 17px; font-weight: 500;
+  color: #1a2440;
+  padding: 14px 4px;
+  border-bottom: 1px solid rgba(5,7,13,0.07);
+}
+.mobile-menu a:last-child { border-bottom: none; }
+.mobile-menu-cta {
+  margin-top: 14px;
+  text-align: center;
+  color: var(--accent) !important;
+  border: 1px solid rgba(74,135,245,0.32);
+  border-radius: 6px;
+  background: rgba(74,135,245,0.08);
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 100px 52px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(74,135,245,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,135,245,0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  pointer-events: none;
+}
+
+.hero-glow-1 {
+  position: absolute;
+  top: 10%; right: 10%;
+  width: 600px; height: 600px;
+  background: radial-gradient(ellipse, rgba(74,135,245,0.09) 0%, transparent 65%);
+  pointer-events: none;
+  animation: breathe 7s ease-in-out infinite;
+}
+.hero-glow-2 {
+  position: absolute;
+  bottom: 20%; left: 5%;
+  width: 400px; height: 300px;
+  background: radial-gradient(ellipse, rgba(74,135,245,0.05) 0%, transparent 65%);
+  pointer-events: none;
+  animation: breathe 9s ease-in-out infinite reverse;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+.hero-left { position: relative; z-index: 2; max-width: 640px; }
+
+.hero-eyebrow {
+  font-size: 14px; font-weight: 700;
+  letter-spacing: 3.5px; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 24px;
+}
+
+.hero h1 {
+  font-size: clamp(48px, 6.5vw, 96px);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -3.5px;
+  margin-bottom: 32px;
+}
+.hero h1 .blue { color: var(--accent-bright); }
+
+.hero-sub {
+  font-size: 17px; color: var(--text-muted);
+  line-height: 1.65; max-width: 380px;
+  margin-bottom: 40px;
+}
+
+.hero-actions { display: flex; gap: 12px; }
+
+.btn-primary {
+  display: inline-block; text-decoration: none;
+  font-size: 15px; font-weight: 600;
+  color: var(--bg);
+  background: var(--accent-bright);
+  border-radius: 5px; padding: 11px 22px;
+  border: none; cursor: none;
+  transition: opacity 0.18s, transform 0.15s;
+}
+.btn-primary:hover { opacity: 0.82; transform: translateY(-1px); }
+
+.btn-ghost {
+  display: inline-block; text-decoration: none;
+  font-size: 15px; font-weight: 500;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 5px; padding: 11px 22px;
+  transition: color 0.18s, border-color 0.18s, transform 0.15s;
+}
+.btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.18); transform: translateY(-1px); }
+
+.hero-right {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.product-hero-img {
+  width: 100%; max-width: 520px;
+  filter: drop-shadow(0 0 60px rgba(74,135,245,0.25)) drop-shadow(0 0 120px rgba(74,135,245,0.1));
+  animation: float 6s ease-in-out infinite;
+  user-select: none;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(-1deg); }
+  50% { transform: translateY(-16px) rotate(1deg); }
+}
+
+/* ── SECTION BASE ── */
+section { padding: 112px 52px; }
+
+.label {
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 18px;
+}
+
+/* ── PROBLEM ── */
+#problem { background: var(--bg); border-top: 1px solid var(--border); }
+.problem-inner { max-width: 1100px; margin: 0 auto; }
+/* problem section runs a touch wider so the US map has room to grow
+   without squeezing the headlines back to one word per line */
+#problem .problem-inner { max-width: min(1360px, calc(100vw - 72px)); }
+
+.problem-headline {
+  font-size: clamp(38px, 5.5vw, 70px);
+  font-weight: 700; line-height: 1.04;
+  letter-spacing: -2.5px; max-width: 800px;
+  margin-bottom: 52px;
+}
+.problem-headline .red { color: var(--red); }
+
+.problem-body-text {
+  font-size: 16px; color: var(--text-muted);
+  line-height: 1.72; max-width: 540px;
+  margin-bottom: 80px;
+}
+
+/* cause → result sticky stack sits on the left; a large US map pins on the
+   right, anchored to the section's right edge. The text rides on top (z-index),
+   so when the window narrows the map simply slides under the text. */
+.causal-layout { position: relative; }
+.causal-stack {
+  position: relative; z-index: 2;
+  max-width: 720px;
+  margin-bottom: 0;
+}
+.causal-panel { height: 150vh; }
+.causal-sticky { position: sticky; top: 16vh; }
+.causal-sticky .problem-body-text { margin-bottom: 0; }
+
+/* map — big, anchored right, behind the text */
+.causal-map-col {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: min(600px, 50vw);
+  z-index: 1;
+  pointer-events: none;
+}
+.causal-map-wrap {
+  position: sticky; top: 13vh;
+  height: 80vh;
+  display: flex; align-items: center; justify-content: center;
+}
+/* soft fade on the map's left edge so it dissolves under the text
+   wherever the two overlap on narrower screens */
+.causal-map-wrap svg {
+  width: 100%; height: 100%; overflow: visible;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 15%, #000 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 15%, #000 100%);
+}
+.us-outline {
+  fill: rgba(74,135,245,0.05);
+  stroke: rgba(120,175,249,0.34);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+.map-dot { transition: opacity 0.12s linear; }
+.map-dot-blue {
+  fill: var(--accent-bright);
+  filter: drop-shadow(0 0 5px rgba(74,135,245,0.85));
+}
+.map-dot-red {
+  fill: var(--red);
+  opacity: 0;
+  filter: drop-shadow(0 0 4px rgba(239,73,73,0.8));
+}
+.stats-row { margin-top: 40px; }
+.causal-tag {
+  display: inline-block;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: 4px; padding: 4px 10px;
+  margin-bottom: 22px;
+}
+
+.stats-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--border);
+}
+.stat-item {
+  padding: 40px 40px 40px 0;
+  border-right: 1px solid var(--border);
+}
+.stat-item:not(:first-child) { padding-left: 40px; }
+.stat-item:last-child { border-right: none; }
+
+.stat-num {
+  font-size: clamp(44px, 5.5vw, 72px);
+  font-weight: 700; letter-spacing: -3px;
+  color: var(--red); line-height: 1;
+  margin-bottom: 12px;
+}
+.stat-desc {
+  font-size: 17px; color: var(--text-muted);
+  line-height: 1.55; max-width: 200px;
+}
+
+/* ── PRODUCT SHOWCASE ── */
+#product {
+  background: var(--bg-2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.product-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 64px; align-items: center;
+}
+
+.product-text {}
+.product-headline {
+  font-size: clamp(32px, 4.5vw, 54px);
+  font-weight: 700; line-height: 1.06;
+  letter-spacing: -2px; margin-bottom: 24px;
+}
+.product-headline .blue { color: var(--accent-bright); }
+
+.product-desc {
+  font-size: 17px; color: var(--text-muted);
+  line-height: 1.7; margin-bottom: 36px;
+}
+
+.product-specs {
+  display: flex; flex-direction: column; gap: 0;
+  border: 1px solid var(--border); border-radius: 10px;
+  overflow: hidden; margin-top: 36px;
+}
+.spec-row {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.spec-row:last-child { border-bottom: none; }
+.spec-label { color: var(--text-muted); }
+.spec-value { color: var(--text); font-weight: 500; }
+
+.product-img-wrap {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.product-img-wrap::before {
+  content: '';
+  position: absolute;
+  width: 360px; height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(74,135,245,0.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+.product-showcase-img {
+  width: 100%; max-width: 420px;
+  filter: drop-shadow(0 0 40px rgba(74,135,245,0.2));
+  position: relative; z-index: 1;
+}
+
+/* ── APPROACH ── */
+#approach {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+.approach-inner { max-width: 1100px; margin: 0 auto; }
+
+.approach-header {
+  margin-bottom: 72px;
+}
+.approach-headline {
+  font-size: clamp(32px, 4.5vw, 56px);
+  font-weight: 700; line-height: 1.05; letter-spacing: -2px;
+  max-width: 800px; margin-bottom: 28px;
+}
+.approach-headline .blue { color: var(--accent-bright); }
+.approach-desc { font-size: 17px; color: var(--text-muted); line-height: 1.72; max-width: 620px; }
+
+.steps {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+}
+.step {
+  background: var(--bg-3); padding: 40px 34px;
+  transition: background 0.28s;
+}
+.step:hover { background: #111628; }
+.step-num {
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 28px;
+}
+.step-title {
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 700; line-height: 1.15;
+  letter-spacing: -0.7px; margin-bottom: 18px;
+}
+.step-title .blue { color: var(--accent-bright); }
+.step-body { font-size: 17px; color: var(--text-muted); line-height: 1.65; }
+
+/* ── FOR UROLOGISTS ── */
+#urologists { background: var(--bg-3); border-top: 1px solid var(--border); }
+.uro-inner { max-width: 1100px; margin: 0 auto; }
+.uro-header { margin-bottom: 64px; }
+.uro-headline {
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 700; letter-spacing: -2.5px;
+  line-height: 1.04; max-width: 780px; margin-bottom: 24px;
+}
+.uro-headline .blue { color: var(--accent-bright); }
+.uro-desc { font-size: 17px; color: var(--text-muted); line-height: 1.7; max-width: 530px; }
+.uro-header { position: relative; }
+.uro-img {
+  position: absolute;
+  right: -52px;
+  bottom: -64px; /* header's margin-bottom — bottom edge sits exactly on the cards box */
+  width: min(55%, 645px);
+  pointer-events: none;
+  user-select: none;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 28%), linear-gradient(to bottom, transparent 0%, black 25%);
+  mask-image: linear-gradient(to right, transparent 0%, black 28%), linear-gradient(to bottom, transparent 0%, black 25%);
+  -webkit-mask-composite: destination-in;
+  mask-composite: intersect;
+  mix-blend-mode: screen; /* black photo background dissolves into the section */
+}
+#urologists .step { background: var(--bg-2); padding: 40px 18px; }
+#urologists .step:hover { background: #111628; }
+
+/* ── IMPACT ── */
+#impact { background: var(--bg-2); border-top: 1px solid var(--border); }
+.impact-inner { max-width: 1100px; margin: 0 auto; }
+.impact-header { margin-bottom: 64px; }
+.impact-headline {
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 700; letter-spacing: -2.5px;
+  line-height: 1.04; max-width: 640px; margin-bottom: 18px;
+}
+.impact-subhead { font-size: 17px; color: var(--text-muted); max-width: 620px; line-height: 1.65; }
+
+.impact-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+}
+.impact-card {
+  background: var(--bg-3); padding: 48px 44px;
+  transition: background 0.28s;
+}
+.impact-card:hover { background: #0e1320; }
+
+.impact-tag {
+  display: inline-block;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--border-blue);
+  border-radius: 4px; padding: 4px 10px;
+  margin-bottom: 26px; background: var(--accent-dim);
+}
+.impact-number {
+  font-size: clamp(46px, 5.8vw, 78px);
+  font-weight: 700; letter-spacing: -3px;
+  color: var(--text); line-height: 1; margin-bottom: 12px;
+}
+.impact-desc {
+  font-size: 15px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text-muted); max-width: 260px; line-height: 1.55;
+}
+
+/* ── TEAM ── */
+#team {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+.team-inner { max-width: 1100px; margin: 0 auto; }
+.team-headline {
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 700; letter-spacing: -2.5px;
+  line-height: 1.04; margin-bottom: 64px;
+}
+.team-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+}
+.member {
+  background: var(--bg-2); padding: 36px 32px;
+  transition: background 0.28s;
+  text-align: center;
+}
+.member:hover { background: #0e1320; }
+
+.member-photo {
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  object-fit: cover; object-position: top center;
+  margin: 0 auto 20px;
+  border: 1px solid var(--border-blue);
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s;
+}
+.member:hover .member-photo {
+  transform: scale(1.06);
+  box-shadow: 0 0 30px rgba(74,135,245,0.28);
+}
+.member-name { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; margin-bottom: 6px; }
+.member-role {
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 4px;
+}
+.member-title { font-size: 17px; color: var(--text-muted); }
+
+/* Founders cards flex so LinkedIn buttons bottom-align across the row,
+   even when a title wraps to two lines. */
+.founders-grid .member { display: flex; flex-direction: column; align-items: center; }
+.founders-grid .member-title { margin-bottom: 14px; }
+.founders-grid .member-linkedin { margin-top: auto; }
+
+.member-linkedin {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px;
+  margin-top: 14px;
+  flex-shrink: 0;
+  border: 1px solid var(--border-blue);
+  border-radius: 7px;
+  background: var(--accent-dim);
+  color: var(--accent-bright);
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.member-linkedin:hover {
+  background: rgba(74,135,245,0.28);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 18px rgba(74,135,245,0.25);
+}
+.member-linkedin svg { width: 15px; height: 15px; fill: currentColor; }
+
+.team-section-label {
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--text-dim); margin-bottom: 16px;
+}
+
+.team-grid-1 {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.team-grid-1 .member {
+  grid-column: 1;
+}
+
+.team-grid-2 {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+}
+
+/* ── CONTACT ── */
+#contact { background: var(--bg-2); border-top: 1px solid var(--border); }
+.contact-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: start;
+}
+.contact-headline {
+  font-size: clamp(36px, 5vw, 60px);
+  font-weight: 700; letter-spacing: -2.5px;
+  line-height: 1.04; margin-bottom: 18px;
+}
+.contact-sub { font-size: 17px; color: var(--text-muted); line-height: 1.65; }
+
+.contact-form { display: flex; flex-direction: column; gap: 11px; }
+.contact-form input,
+.contact-form textarea {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 7px; padding: 13px 16px;
+  font-size: 16px; color: var(--text);
+  outline: none; font-family: inherit;
+  transition: border-color 0.18s;
+}
+.contact-form input::placeholder,
+.contact-form textarea::placeholder { color: var(--text-dim); }
+.contact-form input:focus,
+.contact-form textarea:focus { border-color: var(--border-blue); }
+.contact-form textarea { min-height: 110px; resize: vertical; }
+
+/* ── FOOTER ── */
+footer {
+  padding: 28px 52px;
+  border-top: 1px solid var(--border);
+  font-size: 14px; color: var(--text-dim);
+}
+.footer-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.footer-tagline {
+  font-style: italic;
+  color: var(--accent-bright);
+  letter-spacing: 0.2px;
+  text-align: center;
+  flex: 1;
+}
+.footer-disclaimer {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  max-width: 760px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* ── TRACTION BANNER ── */
+.traction-bar {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 36px 0;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  overflow: hidden;
+}
+
+.traction-label {
+  flex-shrink: 0;
+  padding-left: 52px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.traction-track-wrap {
+  flex: 1;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
+.traction-track {
+  display: flex;
+  align-items: center;
+  gap: 56px;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+
+.traction-track img {
+  height: 52px;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.62;          /* fallback; JS drives a center-spotlight */
+  flex-shrink: 0;
+  cursor: default;
+  will-change: opacity;
+}
+
+/* Logos with a solid/opaque background just get rounded corners
+   so they sit nicely on the dark band. */
+.traction-track img.solid-logo {
+  border-radius: 8px;
+}
+
+/* Dark logos on transparent backgrounds get a white chip. */
+.traction-track img.chip-logo {
+  background: #fff;
+  padding: 7px 12px;
+  border-radius: 8px;
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── TOP-LEFT HERO GRADIENT ── */
+.hero-topleft-glow {
+  position: absolute;
+  top: 0; left: 0;
+  width: 520px; height: 420px;
+  background: radial-gradient(ellipse at 0% 0%, rgba(180,200,255,0.13) 0%, rgba(100,150,255,0.06) 35%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── CYSTO HERO IMAGE ── */
+.hero-cysto-img {
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  height: 100%; width: 58%;
+  object-fit: cover;
+  object-position: 30% center;
+  pointer-events: none;
+  z-index: 1;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%), linear-gradient(to bottom, black 60%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 20%), linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-composite: destination-in;
+  mask-composite: intersect;
+}
+
+/* ── SCOPE SPIN ── */
+.scope-spin-wrap {
+  width: 100%;
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 900px;
+  height: 320px;
+  overflow: hidden;
+}
+.scope-spin-wrap img {
+  width: 80%;
+  max-width: 900px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 32px rgba(74,135,245,0.35));
+  animation: scope-roll 6s linear infinite;
+  transform-origin: center center;
+}
+@keyframes scope-roll {
+  0%   { transform: rotateX(0deg); }
+  100% { transform: rotateX(360deg); }
+}
+
+/* ── RESPONSIVE ── */
+/* Mid-size windows: shrink the urologist image and cap text width
+   so the two never collide as the pane narrows. */
+@media (max-width: 1180px) {
+  .uro-img { width: 42%; right: -24px; }
+  .uro-headline { max-width: 60%; }
+  .uro-desc { max-width: 52%; }
+}
+
+@media (max-width: 820px) {
+  body { cursor: auto; }
+  #cursor-blob, #cursor-dot { display: none; }
+
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .nav-cta { display: none; }
+  .nav-toggle { display: flex; }
+  .logo img { height: 34px; }
+
+  /* HERO */
+  .hero { padding: 96px 24px 56px; min-height: auto; }
+  .hero h1 { letter-spacing: -1.5px; }
+  .hero-sub { max-width: 100%; }
+  .hero-cysto-img { width: 100%; opacity: 0.30; object-position: center; }
+  .hero-left { max-width: 100%; }
+
+  section { padding: 72px 24px; }
+
+  /* FOR UROLOGISTS — image off on small screens */
+  .uro-img { display: none; }
+
+  .problem-body-text { margin-bottom: 56px; }
+  /* single column: text stacks, map hidden (sticky story keeps working) */
+  .causal-layout { grid-template-columns: 1fr; gap: 0; }
+  .causal-map-col { display: none; }
+  .causal-panel { height: 130vh; }
+  .causal-sticky { top: 12vh; }
+  .causal-stack { margin-bottom: 64px; }
+
+  /* PROBLEM stats */
+  .stats-row { grid-template-columns: 1fr; border-top: none; }
+  .stat-item { border-right: none; border-top: 1px solid var(--border); padding: 30px 0 !important; }
+  .stat-desc { max-width: 100%; }
+
+  /* multi-column blocks collapse */
+  .product-inner, .approach-header, .contact-inner { grid-template-columns: 1fr; gap: 40px; }
+  .steps, .impact-grid, .team-grid, .team-grid-1, .team-grid-2 { grid-template-columns: 1fr; }
+
+  /* TEAM — override inline grid/flex */
+  .founders-grid { grid-template-columns: 1fr !important; }
+  .advisors-row { flex-direction: column !important; gap: 1px !important; }
+  .advisor-card { flex: 1 1 auto !important; width: 100%; }
+  .member-name { white-space: normal !important; }
+  .impact-desc, .member-title { max-width: 100%; }
+
+  /* TRACTION band */
+  .traction-bar { flex-direction: column; align-items: stretch; gap: 16px; padding: 26px 0; }
+  .traction-label { padding-left: 24px; }
+  /* keep the track clipped to viewport so it doesn't cause horizontal scroll,
+     and shorten the edge fades so they're visible on a narrow screen */
+  .traction-track-wrap {
+    width: 100%;
+    max-width: 100%;
+    flex: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 12%, black 88%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, black 12%, black 88%, transparent 100%);
+  }
+  .traction-track { gap: 36px; }
+  /* JS spotlight is disabled on mobile — show logos at a fixed bright opacity;
+     the edge-mask above handles the left/right fade. */
+  .traction-track img { height: 38px; opacity: 0.85; }
+
+  /* CONTACT + FOOTER */
+  .footer-top { flex-direction: column; gap: 8px; text-align: center; align-items: center; }
+  .footer-disclaimer { font-size: 11px; }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 44px; letter-spacing: -1px; }
+  section { padding: 60px 20px; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor-blob"></div>
+<div id="cursor-dot"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">
+    <img src="images/Lumenate Medical Logo_resized.png" alt="Lumenate Medical" />
+  </a>
+  <ul class="nav-links">
+    <li><a href="#problem"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.24 3.96 1.92 18.05A2 2 0 0 0 3.64 21h16.72a2 2 0 0 0 1.72-2.95L13.76 3.96a2 2 0 0 0-3.52 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>Problem</a></li>
+    <li><a href="#product"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h1a2 2 0 0 0 2-2 1 1 0 0 1 1-1h6a1 1 0 0 1 1 1 2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"/><circle cx="12" cy="13" r="3"/></svg></span>Device</a></li>
+    <li><a href="#approach"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M12 19h4.5a3.5 3.5 0 0 0 0-7h-8a3.5 3.5 0 0 1 0-7H12"/></svg></span>Approach</a></li>
+    <li><a href="#urologists"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg></span>For Urologists</a></li>
+    <li><a href="#impact"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span>Impact</a></li>
+    <li><a href="#team"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.85"/></svg></span>Team</a></li>
+  </ul>
+  <a class="nav-cta" href="#contact">Get in Touch</a>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#problem">Problem</a>
+  <a href="#product">Device</a>
+  <a href="#approach">Approach</a>
+  <a href="#urologists">For Urologists</a>
+  <a href="#impact">Impact</a>
+  <a href="#team">Team</a>
+  <a href="#contact" class="mobile-menu-cta">Get in Touch</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
+
+  <!-- top-left gradient lightening -->
+  <div class="hero-topleft-glow"></div>
+
+  <!-- cysto photo — right side, full height -->
+  <img src="images/cysto_pic2 mirror.png" alt="" class="hero-cysto-img" />
+
+  <div class="hero-left">
+    <div class="hero-eyebrow reveal">Lumenate Medical</div>
+    <h1 class="reveal reveal-delay-1">
+      Bladder cancer<br>doesn't wait.
+      <span class="blue"><br>Neither should<br>screening.</span>
+    </h1>
+    <p class="hero-sub reveal reveal-delay-2">Expanding access to life-saving bladder cancer screening — making it available everywhere, not only where specialists practice.</p>
+    <div class="hero-actions reveal reveal-delay-3">
+      <a class="btn-primary" href="#approach">See how it works</a>
+      <a class="btn-ghost" href="#contact">Get in touch</a>
+    </div>
+  </div>
+
+  <div class="hero-right reveal-scale reveal-delay-2" style="opacity:0.0; pointer-events:none; position:absolute;">
+    <!-- placeholder so grid still works; 3D canvas replaces this -->
+  </div>
+</section>
+
+<!-- TRACTION BANNER -->
+<div class="traction-bar">
+  <div class="traction-label">Supported by</div>
+  <div class="traction-track-wrap">
+    <div class="traction-track" id="traction-track">
+      <img src="images/traction_logos/jhu_bme_white.png" alt="JHU Engineering" />
+      <img src="images/traction_logos/CBID logo white.png" alt="JHU CBID" />
+      <img src="images/traction_logos/jhu-med-white.png" alt="JHU Medicine" />
+      <img src="images/traction_logos/Abell-logo.png" alt="Abell Foundation" />
+      <img src="images/traction_logos/InnovationNexus.png" alt="AUA Innovation Nexus" />
+      <img src="images/traction_logos/tedco_logo.png?v=2" alt="TEDCO" />
+      <img src="images/traction_logos/venturewell-logo-generic-feature-1080x720-1.png" alt="Venturewell" />
+      <img src="images/traction_logos/Pioneer.png" alt="Pioneer" />
+      <img src="images/traction_logos/Propel.png" alt="Propel" />
+      <img src="images/traction_logos/startup-logo-white.png" alt="TU Startup" />
+      <img src="images/traction_logos/pava_logo.jpeg" alt="Pava" class="solid-logo" />
+      <!-- duplicate set for seamless loop -->
+      <img src="images/traction_logos/jhu_bme_white.png" alt="JHU Engineering" aria-hidden="true" />
+      <img src="images/traction_logos/CBID logo white.png" alt="JHU CBID" aria-hidden="true" />
+      <img src="images/traction_logos/jhu-med-white.png" alt="JHU Medicine" aria-hidden="true" />
+      <img src="images/traction_logos/Abell-logo.png" alt="Abell Foundation" aria-hidden="true" />
+      <img src="images/traction_logos/InnovationNexus.png" alt="AUA Innovation Nexus" aria-hidden="true" />
+      <img src="images/traction_logos/tedco_logo.png?v=2" alt="TEDCO" aria-hidden="true" />
+      <img src="images/traction_logos/venturewell-logo-generic-feature-1080x720-1.png" alt="Venturewell" aria-hidden="true" />
+      <img src="images/traction_logos/Pioneer.png" alt="Pioneer" aria-hidden="true" />
+      <img src="images/traction_logos/Propel.png" alt="Propel" aria-hidden="true" />
+      <img src="images/traction_logos/startup-logo-white.png" alt="TU Startup" aria-hidden="true" />
+      <img src="images/traction_logos/pava_logo.jpeg" alt="Pava" aria-hidden="true" class="solid-logo" />
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="problem-inner">
+    <div class="causal-layout">
+    <div class="causal-stack">
+      <div class="causal-panel">
+        <div class="causal-sticky">
+          <div class="label reveal">The Problem</div>
+          <div class="causal-tag reveal">The Cause</div>
+          <h2 class="problem-headline reveal reveal-delay-1">
+            A shrinking urologic workforce<br><span class="red">can't meet growing demand.</span>
+          </h2>
+          <p class="problem-body-text reveal reveal-delay-2">
+            Demand for urologic care keeps climbing while the number of urologists falls — and the specialists who remain are concentrated in fewer and fewer places.
+          </p>
+        </div>
+      </div>
+      <div class="causal-panel">
+        <div class="causal-sticky">
+          <div class="causal-tag reveal">The Result</div>
+          <h2 class="problem-headline reveal reveal-delay-1">
+            Millions wait <span class="red">months</span><br>for screening that<br>could save their life.
+          </h2>
+          <p class="problem-body-text reveal reveal-delay-2">
+            Bladder cancer is most treatable when caught early. But for most patients, access depends on geography and a long wait for an appointment.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="causal-map-col">
+      <div class="causal-map-wrap">
+        <svg id="causal-map" viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Map of the United States showing urology practices thinning as patient demand grows">
+          <path class="us-outline" d="M110 95 L300 82 L520 78 L560 95 L585 130 L620 150 L640 120 L690 145 L720 120 L780 120 L830 100 L870 85 L885 130 L855 155 L845 195 L855 235 L860 275 L875 320 L890 350 L905 375 L920 430 L915 480 L895 455 L885 410 L860 385 L820 400 L770 415 L730 400 L710 440 L680 405 L640 415 L610 460 L585 510 L560 470 L520 445 L470 430 L430 440 L400 420 L300 435 L200 445 L140 435 L120 400 L95 340 L85 270 L100 200 L105 140 Z"/>
+        </svg>
+      </div>
+    </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-item reveal reveal-delay-1">
+        <div class="stat-num" data-count="6.5" data-prefix="$" data-suffix="B" data-decimals="1">$0B</div>
+        <div class="stat-desc">Annual burden to the healthcare system</div>
+      </div>
+      <div class="stat-item reveal reveal-delay-2">
+        <div class="stat-num" data-count="63" data-suffix="%" data-decimals="0">0%</div>
+        <div class="stat-desc">Of U.S. counties have no practicing urologist</div>
+      </div>
+      <div class="stat-item reveal reveal-delay-3">
+        <div class="stat-num" data-count="20" data-suffix="M" data-decimals="0">0M</div>
+        <div class="stat-desc">Present annually with symptoms warranting cystoscopy evaluation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEVICE -->
+<section id="product">
+  <div class="problem-inner">
+    <div class="label reveal">The Device</div>
+    <h2 class="product-headline reveal reveal-delay-1">
+      Designed for the<br><span class="blue">point of care.</span>
+    </h2>
+    <p class="product-desc reveal reveal-delay-2">
+      Lumenate's catheter-based cystoscope is being designed for non-urologists. It is designed to capture the images urologists need — without a urologist in the room, and without taking them out of the loop.
+    </p>
+  </div>
+</section>
+
+<!-- APPROACH -->
+<section id="approach">
+  <div class="approach-inner">
+    <div class="approach-header">
+      <div class="label reveal">Our Approach</div>
+      <h2 class="approach-headline reveal reveal-delay-1">
+        Enabling providers <span class="blue">already in every community</span> to deliver the screening patients need.
+      </h2>
+      <p class="approach-desc reveal reveal-delay-2">
+        Lumenate Medical aims to enable non-urologist providers — Physician Associates and Nurse Practitioners — to perform bladder cancer screening, with specialist oversight built in. Multiplying what the existing urology workforce can reach.
+      </p>
+    </div>
+    <div class="steps">
+      <div class="step reveal-scale">
+        <div class="step-num">Step 01</div>
+        <div class="step-title">Image collection by <span class="blue">non-urologist providers</span>, such as PAs &amp; NPs</div>
+        <div class="step-body">Community providers use Lumenate's device to capture cystoscopy images with minimal training and built-in guidance.</div>
+      </div>
+      <div class="step reveal-scale reveal-delay-1">
+        <div class="step-num">Step 02</div>
+        <div class="step-title"><span class="blue">Asynchronous</span> image review by urologists</div>
+        <div class="step-body">Board-certified urologists review images remotely on their schedule — no patient visit required.</div>
+      </div>
+      <div class="step reveal-scale reveal-delay-2">
+        <div class="step-num">Impact</div>
+        <div class="step-title"><span class="blue">Faster results,</span> earlier diagnosis</div>
+        <div class="step-body">The goal: patients receive results in days, not months.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR UROLOGISTS -->
+<section id="urologists">
+  <div class="uro-inner">
+    <div class="uro-header">
+      <img src="images/urologist.png" alt="" class="uro-img reveal" />
+      <div class="label reveal">For Urologists</div>
+      <h2 class="uro-headline reveal reveal-delay-1">Get back to the work <span class="blue">you trained to do.</span></h2>
+      <p class="uro-desc reveal reveal-delay-2">Lumenate is designed to extend your reach — multiplying what you can oversee without adding hours to your day. You stay the decision-maker on every case, while routine diagnostics stop competing with the patients who need you most.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal-scale">
+        <div class="step-title">Task-shifting routine, low-margin procedures to <span class="blue">reclaim specialist time</span></div>
+        <div class="step-body">Expanding throughput within the existing workforce.</div>
+      </div>
+      <div class="step reveal-scale reveal-delay-1">
+        <div class="step-title">Refocusing on the higher-value procedures that <span class="blue">only urologists can do</span></div>
+        <div class="step-body">Like tumor resections and stone surgeries.</div>
+      </div>
+      <div class="step reveal-scale reveal-delay-2">
+        <div class="step-title">Simplifying screening to <span class="blue">improve care everywhere</span></div>
+        <div class="step-body">Time freed goes toward new patients — accelerating all urologic care.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT -->
+<section id="impact">
+  <div class="impact-inner">
+    <div class="impact-header">
+      <div class="label reveal">Impact</div>
+      <h2 class="impact-headline reveal reveal-delay-1">Better outcomes for everyone in the system.</h2>
+      <p class="impact-subhead reveal reveal-delay-2">Task-shifting routine cystoscopy creates capacity across the entire practice — not just the cancer pathway. Earlier diagnosis and expanded access are projected to create measurable value for patients, providers, practices, and payers alike.</p>
+    </div>
+    <div class="impact-grid">
+      <div class="impact-card reveal-scale">
+        <div class="impact-tag">Payers</div>
+        <div class="impact-number" data-count="2" data-prefix="$" data-suffix="B" data-decimals="1" data-end="$2B">$0B</div>
+        <div class="impact-desc">Reduction in annual payer expenditure by diagnosing one stage earlier</div>
+      </div>
+      <div class="impact-card reveal-scale reveal-delay-1">
+        <div class="impact-tag">Patients</div>
+        <div class="impact-number" data-count="50" data-suffix="%" data-decimals="0">0%</div>
+        <div class="impact-desc">Reduction in patient out-of-pocket costs vs. late-stage diagnoses</div>
+      </div>
+      <div class="impact-card reveal-scale reveal-delay-2">
+        <div class="impact-tag">Urologists</div>
+        <div class="impact-number" data-count="350" data-suffix="+ hrs" data-decimals="0">0+ hrs</div>
+        <div class="impact-desc">Freed per year, per urologist, for higher-complexity procedures</div>
+      </div>
+      <div class="impact-card reveal-scale reveal-delay-3">
+        <div class="impact-tag">Practices</div>
+        <div class="impact-number" data-count="1.5" data-prefix="$" data-suffix="M" data-decimals="1">$0M</div>
+        <div class="impact-desc">In added annual revenue from task-shifting cystoscopy to non-urologist providers</div>
+      </div>
+    </div>
+    <p class="reveal" style="font-size:13px; color:var(--text-dim); font-style:italic; margin-top:20px; max-width:640px;">Figures shown are projected estimates based on internal modeling and published literature, not results from a clinical study.</p>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="team-inner">
+    <div class="label reveal">Team</div>
+    <h2 class="team-headline reveal reveal-delay-1">The people<br>behind Lumenate.</h2>
+
+    <div class="founders-grid" style="display:grid; grid-template-columns: repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:1px;">
+      <div class="member reveal-scale">
+        <img class="member-photo" src="images/SLOSBERG, HALEY.jpeg" alt="Haley Slosberg" />
+        <div class="member-name">Haley Slosberg, M.S.E.</div>
+        <div class="member-role">Co-Founder</div>
+        <div class="member-title">Chief Executive Officer</div>
+        <a class="member-linkedin" href="https://www.linkedin.com/in/haley-slosberg/" target="_blank" rel="noopener" aria-label="Haley Slosberg on LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg></a>
+      </div>
+      <div class="member reveal-scale reveal-delay-1">
+        <img class="member-photo" src="images/Jack-edited.png" alt="Jack Darbonne" />
+        <div class="member-name">Jack Darbonne, M.S.E.</div>
+        <div class="member-role">Co-Founder</div>
+        <div class="member-title">Chief Technology Officer</div>
+        <a class="member-linkedin" href="https://www.linkedin.com/in/jackdarbonne/" target="_blank" rel="noopener" aria-label="Jack Darbonne on LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg></a>
+      </div>
+      <div class="member reveal-scale reveal-delay-2">
+        <img class="member-photo" src="images/Anand-edited.png" alt="Anand Vaish" />
+        <div class="member-name">Anand Vaish, M.S.E.</div>
+        <div class="member-role">Co-Founder</div>
+        <div class="member-title">Chief Operating Officer</div>
+        <a class="member-linkedin" href="https://www.linkedin.com/in/anand-vaish/" target="_blank" rel="noopener" aria-label="Anand Vaish on LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg></a>
+      </div>
+      <div class="member reveal-scale reveal-delay-3">
+        <img class="member-photo" src="images/rai-arun-1508278995.jpg" alt="Dr. Arun Rai" />
+        <div class="member-name">Dr. Arun Rai, M.D., M.B.A.</div>
+        <div class="member-role">Head of Clinical</div>
+        <div class="member-title">Exited Founder, Johns Hopkins Urologist</div>
+        <a class="member-linkedin" href="https://www.linkedin.com/in/arun-rai-62684227/" target="_blank" rel="noopener" aria-label="Dr. Arun Rai on LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg></a>
+      </div>
+    </div>
+
+    <div class="team-section-label reveal" style="margin-top: 48px;">Advisors</div>
+    <div class="advisors-row" style="display:flex; justify-content:center; gap:24px;">
+      <div class="member advisor-card reveal-scale" style="flex:0 0 calc(32% - 12px); border:1px solid var(--border); border-radius:12px;">
+        <img class="member-photo" src="images/moallaf.jpg" alt="Dr. Mohammad Allaf" />
+        <div class="member-name">Dr. Mohammad Allaf, M.D.</div>
+        <div class="member-role">Advisor</div>
+        <div class="member-title">Urologist-in-Chief and Director, Department of Urology, Johns Hopkins</div>
+      </div>
+      <div class="member advisor-card reveal-scale reveal-delay-1" style="flex:0 0 calc(32% - 12px); border:1px solid var(--border); border-radius:12px;">
+        <img class="member-photo" src="images/jeesin.png" alt="Jee Shin" />
+        <div class="member-name">Jee Shin, M.B.A.</div>
+        <div class="member-role">Advisor</div>
+        <div class="member-title">Founder, Calyxo, Inc.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div>
+      <div class="label reveal">Get in Touch</div>
+      <h2 class="contact-headline reveal reveal-delay-1">Let's talk.</h2>
+      <p class="contact-sub reveal reveal-delay-2">Interested in partnering, investing, or learning more about Lumenate Medical? We'd love to hear from you.</p>
+    </div>
+    <form class="contact-form reveal reveal-delay-1" onsubmit="handleSubmit(event)">
+      <input id="cf-name" type="text" placeholder="Your name" required />
+      <input id="cf-email" type="email" placeholder="Email address" required />
+      <input id="cf-org" type="text" placeholder="Organization" />
+      <textarea id="cf-message" placeholder="Message"></textarea>
+      <button type="submit" class="btn-primary" style="width:fit-content;padding:12px 26px;cursor:none;">Send message</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <span>&copy; 2026 Lumenate Medical. All rights reserved.</span>
+    <span class="footer-tagline">Reducing the time patients spend in the dark.</span>
+    <span>hello@lumenatemedical.com</span>
+  </div>
+  <p class="footer-disclaimer">
+    Lumenate Medical's device is in development and is not available for sale. It has not been cleared or approved by the U.S. Food and Drug Administration.
+  </p>
+</footer>
+
+<script>
+/* ── CURSOR ── */
+const blob = document.getElementById('cursor-blob');
+const dot  = document.getElementById('cursor-dot');
+let mx = 0, my = 0, bx = 0, by = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+});
+(function animateBlob() {
+  bx += (mx - bx) * 0.06;
+  by += (my - by) * 0.06;
+  blob.style.left = bx + 'px'; blob.style.top = by + 'px';
+  requestAnimationFrame(animateBlob);
+})();
+
+/* ── MOBILE MENU ── */
+const navToggle = document.getElementById('nav-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+function closeMenu() {
+  navToggle.classList.remove('open');
+  mobileMenu.classList.remove('open');
+  navToggle.setAttribute('aria-expanded', 'false');
+}
+function toggleMenu() {
+  const willOpen = !mobileMenu.classList.contains('open');
+  navToggle.classList.toggle('open', willOpen);
+  mobileMenu.classList.toggle('open', willOpen);
+  navToggle.setAttribute('aria-expanded', String(willOpen));
+}
+navToggle.addEventListener('click', toggleMenu);
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+document.addEventListener('click', e => {
+  if (mobileMenu.classList.contains('open') &&
+      !mobileMenu.contains(e.target) && !navToggle.contains(e.target)) {
+    closeMenu();
+  }
+});
+
+/* ── HIDE NAV ON SCROLL DOWN, SHOW ON SCROLL UP ── */
+(function () {
+  const navEl = document.querySelector('nav');
+  let lastY = window.scrollY;
+  let ticking = false;
+  const DELTA = 6;        // ignore tiny jitters
+  const TOP_LOCK = 80;    // always show near the very top
+
+  function update() {
+    const y = window.scrollY;
+    if (Math.abs(y - lastY) > DELTA) {
+      if (y > lastY && y > TOP_LOCK) {
+        navEl.classList.add('nav-hidden');     // scrolling down
+        closeMenu();                           // don't leave menu floating
+      } else {
+        navEl.classList.remove('nav-hidden');  // scrolling up
+      }
+      lastY = y;
+    }
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(update); ticking = true; }
+  }, { passive: true });
+})();
+
+/* ── TRACTION SPOTLIGHT: bright in the middle, dim toward the edges ── */
+(function () {
+  const wrap = document.querySelector('.traction-track-wrap');
+  const logos = Array.from(document.querySelectorAll('.traction-track img'));
+  if (!wrap || !logos.length) return;
+
+  const MAX = 1.0;    // opacity dead-center
+  const MIN = 0.12;   // opacity at the edges
+  const POWER = 2.4;  // falloff curve (higher = tighter spotlight)
+
+  // The moving JS spotlight is unreliable on real phones (visual-viewport quirks
+  // on a fast, narrow marquee). On mobile we skip it entirely and let CSS show
+  // logos at a fixed bright opacity with the edge-mask doing the fade.
+  const MOBILE_BP = 820;
+  let running = false;
+
+  function start() {
+    if (running) return;
+    running = true;
+    requestAnimationFrame(frame);
+  }
+  function stop() {
+    running = false;
+    // hand control back to CSS by clearing inline opacity
+    logos.forEach(img => { img.style.opacity = ''; });
+  }
+  function sync() {
+    if (window.innerWidth > MOBILE_BP) start();
+    else stop();
+  }
+
+  function frame() {
+    if (!running) return;
+    // READ pass — batch all measurements first (single reflow, no thrash)
+    const wrapRect = wrap.getBoundingClientRect();
+    // Use the VISIBLE band span (intersection of wrap with viewport) so the
+    // bright point is always the on-screen middle, even if the track overflows.
+    const visLeft  = Math.max(wrapRect.left, 0);
+    const visRight = Math.min(wrapRect.right, window.innerWidth);
+    const center = (visLeft + visRight) / 2;
+    const halfRange = Math.max((visRight - visLeft) / 2, 1);
+    const opacities = logos.map(img => {
+      const r = img.getBoundingClientRect();
+      const imgCenter = r.left + r.width / 2;
+      const dist = Math.min(Math.abs(imgCenter - center) / halfRange, 1);
+      const t = Math.pow(dist, POWER);
+      return (MAX - (MAX - MIN) * t).toFixed(3);
+    });
+    // WRITE pass — apply after all reads
+    for (let i = 0; i < logos.length; i++) logos[i].style.opacity = opacities[i];
+
+    requestAnimationFrame(frame);
+  }
+
+  sync();
+  window.addEventListener('resize', sync, { passive: true });
+})();
+
+/* ── PROBLEM: US map — blue urology-practice dots thin out through the
+   "shrinking workforce" phase, then red patient dots bloom around the
+   survivors through the "result" phase ── */
+(function () {
+  const stack = document.querySelector('.causal-stack');
+  const svg   = document.getElementById('causal-map');
+  if (!stack || !svg) return;
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp01 = v => Math.min(Math.max(v, 0), 1);
+  // deterministic pseudo-random so thresholds are stable across frames
+  const rand = (s) => { const x = Math.sin(s * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+
+  // Blue dots = urology practices, distributed like real metro density:
+  // dense Northeast + California, moderate Midwest/Texas/Florida, sparse interior West.
+  const practices = [
+    // Northeast corridor
+    [845,190],[852,158],[825,205],[810,220],[800,229],[760,200],[740,162],[845,170],[852,163],[838,197],
+    // Mid-Atlantic + Southeast
+    [810,250],[800,276],[780,286],[750,320],[830,305],[860,360],[886,400],[884,404],[905,460],[710,290],
+    [680,301],[730,330],[712,400],[792,262],
+    // Midwest
+    [655,185],[700,165],[720,186],[720,206],[710,221],[670,205],[645,166],[580,131],[630,245],[560,240],
+    [598,196],[690,232],
+    // Texas
+    [600,425],[560,375],[540,435],[555,410],[551,372],
+    // Plains / Mountain (sparse)
+    [400,260],[280,236],[240,380],[360,340],[555,320],[555,210],[545,285],[470,300],[330,300],
+    // West coast + Southwest
+    [140,380],[155,415],[95,310],[110,290],[100,322],[120,120],[110,160],[215,350],[120,340],[135,200],
+    // added density (indices 60+)
+    [830,178],[700,250],[772,300],[645,300],[600,330],[520,205],[440,290],[335,275],[185,275],[130,258],
+    [645,275],[748,198],[820,268],[872,382],[560,300]
+  ];
+
+  // Which practices vanish (the shrinking workforce). Spread across the country,
+  // leaning toward interior/rural so the coasts stay comparatively served.
+  const vanishIdx = new Set([2,6,9,13,17,19,21,23,25,31,33,36,38,40,41,42,43,44,45,46,53,57,58,62,66,67,68,74]);
+
+  const blues = [], reds = [];
+  const outline = svg.querySelector('.us-outline');
+  const onLand = (x, y) => { const pt = svg.createSVGPoint(); pt.x = x; pt.y = y; return outline.isPointInFill(pt); };
+
+  // a medical plus/cross glyph centered at (x,y) — reads as a care site
+  const plusPath = (x, y) => {
+    const h = 5.6, w = 1.9; // half-length, half-thickness of the cross arms
+    return `M${x-w} ${y-h}H${x+w}V${y-w}H${x+h}V${y+w}H${x+w}V${y+h}H${x-w}V${y+w}H${x-h}V${y-w}H${x-w}Z`;
+  };
+
+  practices.forEach((p, i) => {
+    const c = document.createElementNS(NS, 'path');
+    c.setAttribute('d', plusPath(p[0], p[1]));
+    c.setAttribute('class', 'map-dot map-dot-blue');
+    svg.appendChild(c);
+    const vanishes = vanishIdx.has(i);
+    // vanishing dots fade out across the first (cause) phase, staggered
+    blues.push({ el: c, vanishes, t: 0.16 + rand(i + 1) * 0.26 });
+
+    // Red patient dots cluster around the practices that SURVIVE
+    if (!vanishes) {
+      const n = 2 + Math.floor(rand(i + 50) * 3); // 2–4 patients per surviving practice
+      for (let k = 0; k < n; k++) {
+        let rx, ry, tries = 0;
+        do {
+          const ang = rand(i * 7 + k * 3 + tries * 17) * Math.PI * 2;
+          const rad = 9 + rand(i * 13 + k + tries * 29) * 15;
+          rx = p[0] + Math.cos(ang) * rad;
+          ry = p[1] + Math.sin(ang) * rad * 0.8;
+        } while (!onLand(rx, ry) && ++tries < 8);
+        if (!onLand(rx, ry)) continue; // give up if we can't land it (tight coastal spot)
+        const rc = document.createElementNS(NS, 'circle');
+        rc.setAttribute('cx', rx.toFixed(1)); rc.setAttribute('cy', ry.toFixed(1)); rc.setAttribute('r', 3);
+        rc.setAttribute('class', 'map-dot map-dot-red');
+        svg.appendChild(rc);
+        reds.push({ el: rc, t: 0.56 + rand(i * 5 + k * 2) * 0.36 }); // bloom across result phase
+      }
+    }
+  });
+
+  function update() {
+    ticking = false;
+    if (reduced) { blues.forEach(b => b.el.style.opacity = b.vanishes ? 0 : 1); reds.forEach(r => r.el.style.opacity = 1); return; }
+    const total = stack.offsetHeight - window.innerHeight;
+    const p = total > 0 ? clamp01(-stack.getBoundingClientRect().top / total) : 0;
+
+    for (const b of blues) {
+      if (!b.vanishes) { b.el.style.opacity = 1; continue; }
+      // fade from full to gone over a short window around its threshold
+      b.el.style.opacity = (1 - clamp01((p - b.t) / 0.06)).toFixed(3);
+    }
+    for (const r of reds) {
+      r.el.style.opacity = clamp01((p - r.t) / 0.05).toFixed(3);
+    }
+  }
+
+  let ticking = false;
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  update();
+})();
+
+/* ── SCROLL REVEAL ── */
+const revealEls = document.querySelectorAll('.reveal, .reveal-scale, .reveal-left');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+revealEls.forEach(el => observer.observe(el));
+
+setTimeout(() => {
+  document.querySelectorAll('.hero .reveal, .hero .reveal-scale').forEach(el => el.classList.add('visible'));
+}, 80);
+
+/* ── COUNTING NUMBERS ── */
+function startCount(el) {
+  if (el._counted) return;
+  el._counted = true;
+  const target   = parseFloat(el.dataset.count);
+  const prefix   = el.dataset.prefix || '';
+  const suffix   = el.dataset.suffix || '';
+  const decimals = parseInt(el.dataset.decimals ?? (target % 1 !== 0 ? 1 : 0));
+  const cleanEnd = el.dataset.end || null;
+  const duration = 1500;
+  const start    = performance.now();
+
+  (function tick(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    const cur  = target * ease;
+    el.textContent = prefix + cur.toFixed(decimals) + suffix;
+    if (p < 1) requestAnimationFrame(tick);
+    else el.textContent = cleanEnd || (prefix + target.toFixed(decimals) + suffix);
+  })(performance.now());
+}
+
+const countObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) startCount(e.target); });
+}, { threshold: 0.3 });
+document.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el));
+
+/* ── SMOOTH NAV ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+
+/* ── FORM (mailto fallback) ── */
+function handleSubmit(e) {
+  e.preventDefault();
+  const form  = e.target;
+  const name  = (document.getElementById('cf-name').value || '').trim();
+  const email = (document.getElementById('cf-email').value || '').trim();
+  const org   = (document.getElementById('cf-org').value || '').trim();
+  const msg   = (document.getElementById('cf-message').value || '').trim();
+
+  const subject = `Website inquiry from ${name || 'a visitor'}`;
+  const body =
+    `Name: ${name}\n` +
+    `Email: ${email}\n` +
+    `Organization: ${org}\n\n` +
+    `${msg}\n`;
+
+  const mailto = `mailto:hello@lumenatemedical.com` +
+    `?subject=${encodeURIComponent(subject)}` +
+    `&body=${encodeURIComponent(body)}`;
+
+  // Open the visitor's email client with the message pre-filled.
+  window.location.href = mailto;
+
+  const btn = form.querySelector('button');
+  btn.textContent = 'Opening email…'; btn.disabled = true;
+  setTimeout(() => { btn.textContent = 'Send message'; btn.disabled = false; }, 3000);
+}
+</script>
+
+</body>
+</html>
