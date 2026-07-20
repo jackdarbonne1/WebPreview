@@ -378,9 +378,12 @@ section { padding: 112px 52px; }
 }
 .us-outline {
   fill: rgba(74,135,245,0.05);
-  stroke: rgba(120,175,249,0.34);
-  stroke-width: 1.4;
+  stroke: rgba(130,180,250,0.42);
+  stroke-width: 2;
   stroke-linejoin: round;
+  stroke-linecap: round;
+  /* soft glow so the hand-drawn line reads gently on the dark section */
+  filter: drop-shadow(0 0 3px rgba(74,135,245,0.35));
 }
 .map-dot { transition: opacity 0.12s linear; }
 .map-dot-blue {
@@ -408,10 +411,10 @@ section { padding: 112px 52px; }
   border-top: 1px solid var(--border);
 }
 .stat-item {
-  padding: 40px 40px 40px 0;
+  padding: 40px 40px;
   border-right: 1px solid var(--border);
+  text-align: center;
 }
-.stat-item:not(:first-child) { padding-left: 40px; }
 .stat-item:last-child { border-right: none; }
 
 .stat-num {
@@ -423,6 +426,7 @@ section { padding: 112px 52px; }
 .stat-desc {
   font-size: 17px; color: var(--text-muted);
   line-height: 1.55; max-width: 200px;
+  margin: 0 auto;
 }
 
 /* ── PRODUCT SHOWCASE ── */
@@ -513,17 +517,20 @@ section { padding: 112px 52px; }
 .step {
   background: var(--bg-3); padding: 40px 34px;
   transition: background 0.28s;
+  display: flex; flex-direction: column;
+  align-items: flex-start;
 }
 .step:hover { background: #111628; }
 .step-num {
   font-size: 13px; font-weight: 700;
   letter-spacing: 2.5px; text-transform: uppercase;
-  color: var(--accent); margin-bottom: 28px;
+  color: var(--accent); margin-bottom: 16px;
 }
 .step-title {
   font-size: clamp(20px, 2.2vw, 28px);
   font-weight: 700; line-height: 1.15;
-  letter-spacing: -0.7px; margin-bottom: 18px;
+  letter-spacing: -0.7px; margin-bottom: 12px;
+  min-height: 5.2em; /* ensures consistent height across all titles */
 }
 .step-title .blue { color: var(--accent-bright); }
 .step-body { font-size: 17px; color: var(--text-muted); line-height: 1.65; }
@@ -553,7 +560,7 @@ section { padding: 112px 52px; }
   mask-composite: intersect;
   mix-blend-mode: screen; /* black photo background dissolves into the section */
 }
-#urologists .step { background: var(--bg-2); padding: 40px 18px; }
+#urologists .step { background: var(--bg-2); padding: 40px 34px; }
 #urologists .step:hover { background: #111628; }
 
 /* ── IMPACT ── */
@@ -565,6 +572,7 @@ section { padding: 112px 52px; }
   font-weight: 700; letter-spacing: -2.5px;
   line-height: 1.04; max-width: 640px; margin-bottom: 18px;
 }
+.impact-headline .blue { color: var(--accent-bright); }
 .impact-subhead { font-size: 17px; color: var(--text-muted); max-width: 620px; line-height: 1.65; }
 
 .impact-grid {
@@ -1068,8 +1076,8 @@ footer {
     </div>
     <div class="causal-map-col">
       <div class="causal-map-wrap">
-        <svg id="causal-map" viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Map of the United States showing urology practices thinning as patient demand grows">
-          <path class="us-outline" d="M110 95 L300 82 L520 78 L560 95 L585 130 L620 150 L640 120 L690 145 L720 120 L780 120 L830 100 L870 85 L885 130 L855 155 L845 195 L855 235 L860 275 L875 320 L890 350 L905 375 L920 430 L915 480 L895 455 L885 410 L860 385 L820 400 L770 415 L730 400 L710 440 L680 405 L640 415 L610 460 L585 510 L560 470 L520 445 L470 430 L430 440 L400 420 L300 435 L200 445 L140 435 L120 400 L95 340 L85 270 L100 200 L105 140 Z"/>
+        <svg id="causal-map" viewBox="84 64 775 504" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Map of the United States showing urology practices thinning as patient demand grows">
+          <path class="us-outline" d="M136.1 74 L144.5 75.1 L152.4 84.6 L161.9 76.1 L175.6 75.1 L225.1 87.3 L255.6 90 L277.2 96.9 L402.5 117.7 L511 132.6 L561.5 133.6 L580 137.4 L620.5 156.5 L650.5 181 L663.7 203.9 L663.7 228.9 L679.5 216.7 L677.4 205.5 L683.2 197.5 L715.3 189.5 L721.1 176.8 L730 168.2 L762.7 154.4 L765.8 140.6 L782.1 104.9 L796.4 100.1 L816.4 109.1 L829 129.4 L847.4 142.7 L849 159.2 L813.2 187.9 L807.4 207.6 L817.4 221.5 L814.3 232.1 L794.2 251.3 L774.2 256.1 L772.7 293.4 L763.2 305.1 L774.2 322.7 L774.2 331.2 L763.2 359.9 L723.7 402 L715.8 413.2 L708.4 433.4 L714.2 457.9 L733.2 484.5 L744.2 525.5 L741.6 538.3 L727.4 548.9 L710.5 550 L678.4 523.9 L659.5 473.9 L629.4 477.1 L605.2 465.4 L597.9 464.8 L585.8 467.5 L577.9 485.6 L564.7 495.2 L544.2 493.6 L524.1 482.9 L508.9 484 L491.5 502.6 L482 507.9 L472.6 523.4 L473.1 543.1 L470.4 548.4 L457.8 556.9 L449.4 558 L417.3 542.6 L415.2 534.6 L408.8 528.2 L407.8 519.1 L399.9 510.1 L398.8 502.6 L381.5 481.3 L366.2 490.9 L352.5 489.3 L342.5 480.3 L330.4 455.2 L316.2 444.1 L304.1 439.8 L292 447.8 L260.9 447.8 L244.6 438.7 L227.2 436.1 L215.1 426.5 L193 418 L185.6 407.3 L177.7 403.1 L155.6 402 L151.4 395.6 L150.9 381.2 L146.1 371.6 L116.1 350.3 L114.5 330.1 L94.5 273.1 L94 220.4 L102.4 203.9 L105.6 184.8 L115.1 166.6 L119.3 142.2 L127.2 125.1 L129.8 107 L127.2 82 Z"/>
         </svg>
       </div>
     </div>
@@ -1142,16 +1150,16 @@ footer {
     <div class="uro-header">
       <img src="images/urologist.png" alt="" class="uro-img reveal" />
       <div class="label reveal">For Urologists</div>
-      <h2 class="uro-headline reveal reveal-delay-1">Get back to the work <span class="blue">you trained to do.</span></h2>
-      <p class="uro-desc reveal reveal-delay-2">Lumenate is designed to extend your reach — multiplying what you can oversee without adding hours to your day. You stay the decision-maker on every case, while routine diagnostics stop competing with the patients who need you most.</p>
+      <h2 class="uro-headline reveal reveal-delay-1">Extending your reach <span class="blue">without adding hours to your day</span></h2>
+      <p class="uro-desc reveal reveal-delay-2">You stay the decision-maker on every case, while routine diagnostics stop competing with the patients who need you most.</p>
     </div>
     <div class="steps">
       <div class="step reveal-scale">
-        <div class="step-title">Task-shifting routine, low-margin procedures to <span class="blue">reclaim specialist time</span></div>
+        <div class="step-title">Task-shifting routine procedures to <span class="blue">reclaim specialist time</span></div>
         <div class="step-body">Expanding throughput within the existing workforce.</div>
       </div>
       <div class="step reveal-scale reveal-delay-1">
-        <div class="step-title">Refocusing on the higher-value procedures that <span class="blue">only urologists can do</span></div>
+        <div class="step-title">Refocusing on the higher-complexity procedures that <span class="blue">only urologists can do</span></div>
         <div class="step-body">Like tumor resections and stone surgeries.</div>
       </div>
       <div class="step reveal-scale reveal-delay-2">
@@ -1167,7 +1175,7 @@ footer {
   <div class="impact-inner">
     <div class="impact-header">
       <div class="label reveal">Impact</div>
-      <h2 class="impact-headline reveal reveal-delay-1">Better outcomes for everyone in the system.</h2>
+      <h2 class="impact-headline reveal reveal-delay-1">Better outcomes for <span class="blue">everyone</span> in the system.</h2>
       <p class="impact-subhead reveal reveal-delay-2">Task-shifting routine cystoscopy creates capacity across the entire practice — not just the cancer pathway. Earlier diagnosis and expanded access are projected to create measurable value for patients, providers, practices, and payers alike.</p>
     </div>
     <div class="impact-grid">
@@ -1418,35 +1426,59 @@ document.addEventListener('click', e => {
   // deterministic pseudo-random so thresholds are stable across frames
   const rand = (s) => { const x = Math.sin(s * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
 
-  // Blue dots = urology practices, distributed like real metro density:
-  // dense Northeast + California, moderate Midwest/Texas/Florida, sparse interior West.
+  // Blue dots = urology practices. Distribution mirrors the AUA "Practicing
+  // Urologists by County" map: dense on both coasts, Florida and the major
+  // metros; sparse across the rural interior (Plains, Mountain West).
   const practices = [
-    // Northeast corridor
-    [845,190],[852,158],[825,205],[810,220],[800,229],[760,200],[740,162],[845,170],[852,163],[838,197],
+    // Northeast corridor (very dense)
+    [817,182],[788,205],[787,193],[779,222],[775,230],[767,227],[798,216],[752,250],[736,270],[726,282],
+    [663,259],[647,210],[759,196],[709,216],
     // Mid-Atlantic + Southeast
-    [810,250],[800,276],[780,286],[750,320],[830,305],[860,360],[886,400],[884,404],[905,460],[710,290],
-    [680,301],[730,330],[712,400],[792,262],
+    [732,302],[736,336],[690,350],[740,378],[647,387],[695,445],[705,475],[709,487],[732,535],[632,356],
+    [581,373],[628,396],[512,447],
     // Midwest
-    [655,185],[700,165],[720,186],[720,206],[710,221],[670,205],[645,166],[580,131],[630,245],[560,240],
-    [598,196],[690,232],
+    [605,273],[644,236],[674,253],[674,273],[655,287],[620,276],[589,250],[512,193],[578,302],[504,307],
     // Texas
-    [600,425],[560,375],[540,435],[555,410],[551,372],
-    // Plains / Mountain (sparse)
-    [400,260],[280,236],[240,380],[360,340],[555,320],[555,210],[545,285],[470,300],[330,300],
-    // West coast + Southwest
-    [140,380],[155,415],[95,310],[110,290],[100,322],[120,120],[110,160],[215,350],[120,340],[135,200],
-    // added density (indices 60+)
-    [830,178],[700,250],[772,300],[645,300],[600,330],[520,205],[440,290],[335,275],[185,275],[130,258],
-    [645,275],[748,198],[820,268],[872,382],[560,300]
+    [469,444],[427,404],[400,450],[419,435],
+    // Plains / Mountain (sparse — only metros)
+    [353,302],[264,273],[250,438],[318,396],[218,407],[458,387],[496,279],
+    // West coast (dense CA + PNW)
+    [162,396],[174,401],[140,350],[158,335],[148,366],[170,382],[148,133],[140,185],
+    // scattered mid-density fill (East / Midwest / interior metros)
+    [640,302],[721,367],[543,387],[512,279],[620,242],[740,304],[272,444],[477,367],[233,222]
   ];
 
-  // Which practices vanish (the shrinking workforce). Spread across the country,
-  // leaning toward interior/rural so the coasts stay comparatively served.
-  const vanishIdx = new Set([2,6,9,13,17,19,21,23,25,31,33,36,38,40,41,42,43,44,45,46,53,57,58,62,66,67,68,74]);
+  // Which practices vanish (the shrinking workforce). Leans on the already-thin
+  // interior and secondary metros; the biggest coastal centers hold on.
+  const vanishIdx = new Set([13,16,24,25,30,31,33,35,36,40,44,45,46,47,53,56,57,58,59,60,61,62,63,64]);
 
   const blues = [], reds = [];
-  const outline = svg.querySelector('.us-outline');
-  const onLand = (x, y) => { const pt = svg.createSVGPoint(); pt.x = x; pt.y = y; return outline.isPointInFill(pt); };
+  // Outline as a JS polygon so the on-land test works even before the SVG is
+  // laid out (the map column is display:none until desktop width, which would
+  // make the native isPointInFill return false and drop every dot).
+  const usPoly = [
+    [136.1,74],[144.5,75.1],[152.4,84.6],[161.9,76.1],[175.6,75.1],[225.1,87.3],[255.6,90],[277.2,96.9],
+    [402.5,117.7],[511,132.6],[561.5,133.6],[580,137.4],[620.5,156.5],[650.5,181],[663.7,203.9],[663.7,228.9],
+    [679.5,216.7],[677.4,205.5],[683.2,197.5],[715.3,189.5],[721.1,176.8],[730,168.2],[762.7,154.4],[765.8,140.6],
+    [782.1,104.9],[796.4,100.1],[816.4,109.1],[829,129.4],[847.4,142.7],[849,159.2],[813.2,187.9],[807.4,207.6],
+    [817.4,221.5],[814.3,232.1],[794.2,251.3],[774.2,256.1],[772.7,293.4],[763.2,305.1],[774.2,322.7],[774.2,331.2],
+    [763.2,359.9],[723.7,402],[715.8,413.2],[708.4,433.4],[714.2,457.9],[733.2,484.5],[744.2,525.5],[741.6,538.3],
+    [727.4,548.9],[710.5,550],[678.4,523.9],[659.5,473.9],[629.4,477.1],[605.2,465.4],[597.9,464.8],[585.8,467.5],
+    [577.9,485.6],[564.7,495.2],[544.2,493.6],[524.1,482.9],[508.9,484],[491.5,502.6],[482,507.9],[472.6,523.4],
+    [473.1,543.1],[470.4,548.4],[457.8,556.9],[449.4,558],[417.3,542.6],[415.2,534.6],[408.8,528.2],[407.8,519.1],
+    [399.9,510.1],[398.8,502.6],[381.5,481.3],[366.2,490.9],[352.5,489.3],[342.5,480.3],[330.4,455.2],[316.2,444.1],
+    [304.1,439.8],[292,447.8],[260.9,447.8],[244.6,438.7],[227.2,436.1],[215.1,426.5],[193,418],[185.6,407.3],
+    [177.7,403.1],[155.6,402],[151.4,395.6],[150.9,381.2],[146.1,371.6],[116.1,350.3],[114.5,330.1],[94.5,273.1],
+    [94,220.4],[102.4,203.9],[105.6,184.8],[115.1,166.6],[119.3,142.2],[127.2,125.1],[129.8,107],[127.2,82]
+  ];
+  const onLand = (x, y) => {
+    let inside = false;
+    for (let i = 0, j = usPoly.length - 1; i < usPoly.length; j = i++) {
+      const xi = usPoly[i][0], yi = usPoly[i][1], xj = usPoly[j][0], yj = usPoly[j][1];
+      if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) inside = !inside;
+    }
+    return inside;
+  };
 
   // a medical plus/cross glyph centered at (x,y) — reads as a care site
   const plusPath = (x, y) => {
