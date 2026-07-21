@@ -429,6 +429,31 @@ section { padding: 112px 52px; }
   margin: 0 auto;
 }
 
+.stats-result {
+  margin-top: 32px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-3);
+  padding: 36px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  text-align: left;
+}
+.stats-result-num {
+  font-size: clamp(44px, 5.5vw, 72px);
+  font-weight: 700; letter-spacing: -3px;
+  color: var(--red); line-height: 1;
+  white-space: nowrap;
+}
+.stats-result-text {
+  font-size: 20px; color: var(--text-muted);
+  line-height: 1.5; max-width: 380px;
+  margin: 0;
+}
+
 /* ── PRODUCT SHOWCASE ── */
 #product {
   background: var(--bg-2);
@@ -1001,7 +1026,7 @@ footer {
       Bladder cancer<br>doesn't wait.
       <span class="blue"><br>Neither should<br>screening.</span>
     </h1>
-    <p class="hero-sub reveal reveal-delay-2">Expanding access to life-saving bladder cancer screening — making it available everywhere, not only where specialists practice.</p>
+    <p class="hero-sub reveal reveal-delay-2">Expanding access to life-saving bladder cancer screening. Reducing the time patients spend in the dark.</p>
     <div class="hero-actions reveal reveal-delay-3">
       <a class="btn-primary" href="#approach">See how it works</a>
       <a class="btn-ghost" href="#contact">Get in touch</a>
@@ -1085,16 +1110,20 @@ footer {
     <div class="stats-row">
       <div class="stat-item reveal reveal-delay-1">
         <div class="stat-num" data-count="6.5" data-prefix="$" data-suffix="B" data-decimals="1">$0B</div>
-        <div class="stat-desc">Annual burden to the healthcare system</div>
+        <div class="stat-desc">annual burden to the healthcare system</div>
       </div>
       <div class="stat-item reveal reveal-delay-2">
         <div class="stat-num" data-count="63" data-suffix="%" data-decimals="0">0%</div>
-        <div class="stat-desc">Of U.S. counties have no practicing urologist</div>
+        <div class="stat-desc">of U.S. counties have no practicing urologist</div>
       </div>
       <div class="stat-item reveal reveal-delay-3">
         <div class="stat-num" data-count="20" data-suffix="M" data-decimals="0">0M</div>
-        <div class="stat-desc">Present annually with symptoms warranting cystoscopy evaluation</div>
+        <div class="stat-desc" style="max-width: 260px;">patients present annually with symptoms warranting cystoscopy evaluation</div>
       </div>
+    </div>
+    <div class="stats-result reveal">
+      <div class="stats-result-num">1 in 4 patients</div>
+      <p class="stats-result-text">will wait longer than 2 months from hematuria diagnosis to cystoscopy.</p>
     </div>
   </div>
 </section>
@@ -1150,8 +1179,8 @@ footer {
     <div class="uro-header">
       <img src="images/urologist.png" alt="" class="uro-img reveal" />
       <div class="label reveal">For Urologists</div>
-      <h2 class="uro-headline reveal reveal-delay-1">Extending your reach <span class="blue">without adding hours to your day</span></h2>
-      <p class="uro-desc reveal reveal-delay-2">You stay the decision-maker on every case, while routine diagnostics stop competing with the patients who need you most.</p>
+      <h2 class="uro-headline reveal reveal-delay-1"><span class="blue">Helping more patients</span> without adding hours to your day</h2>
+      <p class="uro-desc reveal reveal-delay-2">Lumenate is designed to extend your reach — multiplying what you can oversee without adding hours to your day. You stay the decision-maker on every case, while routine diagnostics stop competing with the patients who need you most.</p>
     </div>
     <div class="steps">
       <div class="step reveal-scale">
